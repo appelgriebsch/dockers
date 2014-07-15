@@ -1,16 +1,20 @@
 #
-# Redis Dockerfile
+# MongoDB Dockerfile
 #
 
 # Pull CentOS 7 base image
 FROM centos:centos7
+MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # update system
 RUN \
   rpm -Uhv http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm && \
   yum -y update && \
   yum -y install mongodb mongodb-server && \
-  sed -i 's/^\(dbpath.*\)$/# \1\ndbpath= \/data/' /etc/redis.conf
+  sed -i 's/^\(bind_ip.*\)$/# \1/' /etc/mongodb.conf && \
+  sed -i 's/^\(dbpath.*\)$/# \1\ndbpath= \/data/' /etc/mongodb.conf && \
+  sed -i 's/^\(logpath.*\)$/# \1/' /etc/mongodb.conf && \
+  sed -i 's/^\(fork.*\)$/# \1\nfork = false\ndirectoryperdb = true\nsmallfiles = true/' /etc/mongodb.conf 
 
 # Define mountable directories.
 VOLUME ["/data"]
@@ -18,8 +22,8 @@ VOLUME ["/data"]
 # Define working directory.
 WORKDIR /data
 
-# run service
-CMD ["service", "mongod", "start"]
-
 # Expose ports.
 EXPOSE 27017
+
+# run service
+ENTRYPOINT ["mongod", "-f", "/etc/mongodb.conf"]
