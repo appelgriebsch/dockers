@@ -21,8 +21,8 @@ VOLUME ["/data"]
 # Define working directory.
 WORKDIR /data
 
-# Define default command.
-CMD ["/usr/sbin/redis-server", "/etc/redis.conf"]
+# run service
+CMD ["service", "redis-server", "start"]
 
 # Expose ports.
 EXPOSE 6379
