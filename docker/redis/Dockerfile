@@ -4,6 +4,7 @@
 
 # Pull CentOS 7 base image
 FROM centos:centos7
+MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # update system
 RUN \
@@ -21,8 +22,8 @@ VOLUME ["/data"]
 # Define working directory.
 WORKDIR /data
 
-# run service
-CMD ["service", "redis-server", "start"]
-
 # Expose ports.
 EXPOSE 6379
+
+# run service
+ENTRYPOINT ["redis-server", "/etc/redis.conf"]
