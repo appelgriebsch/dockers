@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.define "centos-large", autostart:false do |lg|
 
-    lg.vm.box = "chef/centos-6.5"
+    lg.vm.box = "centos7-docker"
 
     lg.vm.provider "virtualbox" do |vb|
      vb.memory = 2048
@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "centos-medium", autostart:false do |med|
 
-    med.vm.box = "chef/centos-6.5"
+    med.vm.box = "centos7-docker"
 
     med.vm.provider "virtualbox" do |vb|
      vb.memory = 1024
@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "centos-small", autostart:false do |sm|
 
-    sm.vm.box = "chef/centos-6.5"
+    sm.vm.box = "centos7-docker"
 
     sm.vm.provider "virtualbox" do |vb|
      vb.memory = 512
