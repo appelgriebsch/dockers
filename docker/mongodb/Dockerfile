@@ -3,18 +3,20 @@
 #
 
 # Pull CentOS 7 base image
-FROM centos:centos7
+FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
+# install mongodb
+USER root
 ADD mongodb.repo /etc/yum.repos.d/
-
-# update system
+ADD mongod.ini /etc/supervisord.d/
 RUN \
-  rpm -Uhv http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm && \
-  yum -y update && \
   yum -y install mongodb-org && \
+  mkdir -p /data && \
+  mkdir -p /data/mongodb && \
+  chown -R mongod:mongod /data/mongodb && \
   sed -i 's/^\(bind_ip.*\)$/# \1/' /etc/mongod.conf && \
-  sed -i 's/^\(dbpath.*\)$/# \1\ndbpath= \/data/' /etc/mongod.conf && \
+  sed -i 's/^\(dbpath.*\)$/# \1\ndbpath= \/data\/mongodb/' /etc/mongod.conf && \
   sed -i 's/^\(logpath.*\)$/# \1/' /etc/mongod.conf && \
   sed -i 's/^\(fork.*\)$/# \1\nfork = false\ndirectoryperdb = true\nsmallfiles = true/' /etc/mongod.conf 
 
@@ -22,10 +24,10 @@ RUN \
 VOLUME ["/data"]
 
 # Define working directory.
-WORKDIR /data
+WORKDIR /data/mongodb
 
 # Expose ports.
 EXPOSE 27017
 
 # run service
-ENTRYPOINT ["mongod", "-f", "/etc/mongod.conf"]
+ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
