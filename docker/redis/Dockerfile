@@ -3,27 +3,33 @@
 #
 
 # Pull CentOS 7 base image
-FROM centos:centos7
+FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
-# update system
+# install and configure redis
+USER root
 RUN \
-  rpm -Uhv http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm && \
-  yum -y update && \
   yum -y install redis && \
+  mkdir -p /data && \
+  mkdir -p /data/redis && \
+  mkdir -p /data/redis/db && \
+  chown -R redis:redis /data/redis && \
   sed -i 's/^\(bind .*\)$/# \1/' /etc/redis.conf && \
   sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis.conf && \
-  sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis.conf && \
+  sed -i 's/^\(dir .*\)$/# \1\ndir \/data\/redis\/db/' /etc/redis.conf && \
   sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis.conf
+
+# add supervisor configuration
+ADD redis-server.ini /etc/supervisord.d/
 
 # Define mountable directories.
 VOLUME ["/data"]
 
 # Define working directory.
-WORKDIR /data
+WORKDIR /data/redis
 
 # Expose ports.
 EXPOSE 6379
 
 # run service
-ENTRYPOINT ["redis-server", "/etc/redis.conf"]
+ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
