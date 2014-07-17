@@ -10,10 +10,8 @@ echo Start the database server...
 PGID=$!
 
 echo Creating database user...
-DBUSR=dbUser
-DBPWD=md5$(echo "!dbUseR!" | md5sum)
 sleep 2 
-/usr/pgsql-9.3/bin/psql --command="CREATE ROLE \"$DBUSR\" PASSWORD '\"$DBPWD\"' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
+/usr/pgsql-9.3/bin/psql --file=/tmp/initDB.sql
 
 echo Stopping the database server...
 sleep 2 

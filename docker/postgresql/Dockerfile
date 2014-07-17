@@ -18,6 +18,7 @@ RUN \
 # add supervisor configuration
 ADD postgresql.ini /etc/supervisord.d/
 ADD initDB.sh /tmp/
+ADD initDB.sql /tmp/
 
 # init the database
 USER postgres
