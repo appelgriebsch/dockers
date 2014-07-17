@@ -24,6 +24,9 @@ USER postgres
 RUN \
    /tmp/initDB.sh
 
+# set up autostart of service, mountable data points 
+USER root
+
 # Define mountable directories.
 VOLUME ["/data"]
 
