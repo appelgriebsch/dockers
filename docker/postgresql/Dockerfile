@@ -21,7 +21,6 @@ ADD initDB.sh /tmp/
 
 # init the database
 USER postgres
-
 RUN \
    /tmp/initDB.sh
 

@@ -8,7 +8,6 @@ echo Start the database server...
 PGID=$!
 
 echo Creating database user...
- 
 DBUSR=dbUser
 DBPWD=md5$(echo "!dbUseR!" | md5sum)
 sleep 2 
