@@ -2,6 +2,7 @@
 
 echo Initialize the database...
 /usr/pgsql-9.3/bin/initdb -D /data/postgresql -E UTF-8
+sed -i "s/^\(#listen_addresses.*\)$/listen_addresses = '*'\n\1/" /data/postgresql/postgresql.conf
 
 echo Start the database server...
 /usr/pgsql-9.3/bin/postgres -D /data/postgresql &
