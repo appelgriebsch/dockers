@@ -3,14 +3,15 @@
 #
 
 # Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+FROM appelgriebsch/centos:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # install postgresql server
 USER root
 RUN \
-  rpm -Uhv http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm && \
-  yum -y install postgresql93 postgresql93-contrib postgresql93-docs postgresql93-server postgresql93-plpython postgresql93-plruby && \
+  yum -y install http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm && \
+  yum -y install postgresql93 postgresql93-contrib postgresql93-docs postgresql93-server postgresql93-plpython postgresql93-plruby && \  
+  yum clean all && \
   mkdir -p /data && \
   mkdir -p /data/postgresql && \
   chown -R postgres:postgres /data/postgresql

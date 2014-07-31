@@ -3,13 +3,14 @@
 #
 
 # Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+FROM appelgriebsch/centos:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # install and configure redis
 USER root
 RUN \
   yum -y install redis && \
+  yum clean all && \
   mkdir -p /data && \
   mkdir -p /data/redis && \
   mkdir -p /data/redis/db && \

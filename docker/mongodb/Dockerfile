@@ -3,7 +3,7 @@
 #
 
 # Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+FROM appelgriebsch/centos:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # install mongodb
@@ -12,6 +12,7 @@ ADD mongodb.repo /etc/yum.repos.d/
 ADD mongod.ini /etc/supervisord.d/
 RUN \
   yum -y install mongodb-org && \
+  yum clean all && \
   mkdir -p /data && \
   mkdir -p /data/mongodb && \
   chown -R mongod:mongod /data/mongodb && \
