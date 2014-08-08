@@ -9,20 +9,18 @@ MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 # install mongodb
 USER root
 ADD mongodb.repo /etc/yum.repos.d/
-ADD mongod.ini /etc/supervisord.d/
 RUN \
   yum -y install mongodb-org && \
   yum clean all && \
-  mkdir -p /data && \
-  mkdir -p /data/mongodb && \
+  mkdir -p /data/mongodb/db && \  
   chown -R mongod:mongod /data/mongodb && \
-  sed -i 's/^\(bind_ip.*\)$/# \1/' /etc/mongod.conf && \
-  sed -i 's/^\(dbpath.*\)$/# \1\ndbpath= \/data\/mongodb/' /etc/mongod.conf && \
+  chmod -R 755 /data/mongodb && \ 
+  sed -i 's/^\(dbpath.*\)$/# \1\ndbpath= \/data\/mongodb\/db/' /etc/mongod.conf && \
   sed -i 's/^\(logpath.*\)$/# \1/' /etc/mongod.conf && \
-  sed -i 's/^\(fork.*\)$/# \1\nfork = false\ndirectoryperdb = true\nsmallfiles = true/' /etc/mongod.conf 
+  sed -i 's/^\(fork.*\)$/# \1\nfork = false\ndirectoryperdb = true\nsmallfiles = true\nunixSocketPrefix=\/data\/mongodb\//' /etc/mongod.conf 
 
 # Define mountable directories.
-VOLUME ["/data"]
+VOLUME ["/data/mongodb"]
 
 # Define working directory.
 WORKDIR /data/mongodb
@@ -31,4 +29,5 @@ WORKDIR /data/mongodb
 EXPOSE 27017
 
 # run service
-ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
+USER mongod
+ENTRYPOINT ["/usr/bin/mongod", "-f", "/etc/mongod.conf"]
