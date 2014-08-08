@@ -50,12 +50,20 @@ fi
 echo Checking database node type...$REDIS_MASTER
 if ! [ "$REDIS_MASTER" == "''" ]; then
   # extract ip and port from env variable
-  REDIS_MASTER_IP=1
-  REDIS_MASTER_PORT=2
+  REDIS_MASTER_IP=`echo $REDIS_MASTER | sed -e 's/^\([0-9.]*\):\([0-9]*\)$/\1/'`
+  REDIS_MASTER_PORT=`echo $REDIS_MASTER | sed -e 's/^\([0-9.]*\):\([0-9]*\)$/\2/'`
+
   echo Setting up slave node to $REDIS_MASTER_IP $REDIS_MASTER_PORT
   sed -i "s/^\(# slaveof .*\)$/\1\nslaveof $REDIS_MASTER_IP $REDIS_MASTER_PORT/" /etc/redis.conf 
 fi
 
+echo Checking database log level...$REDIS_LOGLVL
+if ! [ -z "$REDIS_LOGLVL" ]; then
+  echo Setting up log level $REDIS_LOGLVL.
+  sed -i "s/^\(loglevel .*\)$/# \1\nloglevel $REDIS_LOGLVL/" /etc/redis.conf
+fi
+
+sudo ulimit -n 16384
 sudo -u redis /usr/bin/redis-server /etc/redis.conf
 
 # if ! [ -z "$REDIS" ]; then echo hello; fi

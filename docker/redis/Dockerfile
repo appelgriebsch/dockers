@@ -23,6 +23,8 @@ ENV REDIS_DBDIR		/data/redis/db
 ENV REDIS_MASTER	''
 # if dbpwd is set, security check is implied
 ENV REDIS_DBPWD		''
+# log level of redis server
+ENV REDIS_LOGLVL	notice
 
 ADD ./start_service.sh /tmp/
 
