@@ -11,20 +11,17 @@ USER root
 RUN \
   yum -y install redis && \
   yum clean all && \
-  mkdir -p /data && \
-  mkdir -p /data/redis && \
   mkdir -p /data/redis/db && \
   chown -R redis:redis /data/redis && \
-  sed -i 's/^\(bind .*\)$/# \1/' /etc/redis.conf && \
+  chmod -R 755 /data/redis && \
+  sed -i 's/^\(# unixsocket .*\)$/\1\nunixsocket \/data\/redis\/redis.sock/' /etc/redis.conf && \
+  sed -i 's/^\(# unixsocketperm .*\)$/\1\nunixsocketperm 755/' /etc/redis.conf && \
   sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis.conf && \
   sed -i 's/^\(dir .*\)$/# \1\ndir \/data\/redis\/db/' /etc/redis.conf && \
   sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis.conf
 
-# add supervisor configuration
-ADD redis-server.ini /etc/supervisord.d/
-
 # Define mountable directories.
-VOLUME ["/data"]
+VOLUME ["/data/redis"]
 
 # Define working directory.
 WORKDIR /data/redis
@@ -33,4 +30,5 @@ WORKDIR /data/redis
 EXPOSE 6379
 
 # run service
-ENTRYPOINT ["supervisord", "-c", "/etc/supervisord.conf"]
+USER redis
+ENTRYPOINT ["/usr/bin/redis-server", "/etc/redis.conf"]
