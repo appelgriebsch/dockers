@@ -1,5 +1,6 @@
 #
 # Redis Dockerfile
+# VERSION 2.8.13
 #
 
 # Pull CentOS 7 base image
@@ -8,17 +9,32 @@ MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # install and configure redis
 USER root
+# bind to localhost only (will expose a socket for connection)
+ENV REDIS_BIND		127.0.0.1
+# default tcp port for redis server
+ENV REDIS_PORT 		6379
+# default no. of databases
+ENV REDIS_DBCNT		16
+# name of the database dump file
+ENV REDIS_DBFILE 	redis_01.rdb
+# default path to the database filesA
+ENV REDIS_DBDIR		/data/redis/db
+# if master is set, this node is a slave to this master (ip:port)
+ENV REDIS_MASTER	''
+# if dbpwd is set, security check is implied
+ENV REDIS_DBPWD		''
+
+ADD ./start_service.sh /tmp/
+
 RUN \
-  yum -y install redis && \
+  yum -y install redis sudo && \
   yum clean all && \
-  mkdir -p /data/redis/db && \
+  mkdir -p /data/redis && \
   chown -R redis:redis /data/redis && \
   chmod -R 755 /data/redis && \
-  sed -i 's/^\(# unixsocket .*\)$/\1\nunixsocket \/data\/redis\/redis.sock/' /etc/redis.conf && \
-  sed -i 's/^\(# unixsocketperm .*\)$/\1\nunixsocketperm 755/' /etc/redis.conf && \
-  sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis.conf && \
-  sed -i 's/^\(dir .*\)$/# \1\ndir \/data\/redis\/db/' /etc/redis.conf && \
-  sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis.conf
+  sed -i "s/^\(daemonize .*\)$/# \1/" /etc/redis.conf && \
+  sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf && \
+  sed -i "s/^\(Defaults.*requiretty.*\)$/# \1/" /etc/sudoers
 
 # Define mountable directories.
 VOLUME ["/data/redis"]
@@ -30,5 +46,4 @@ WORKDIR /data/redis
 EXPOSE 6379
 
 # run service
-USER redis
-ENTRYPOINT ["/usr/bin/redis-server", "/etc/redis.conf"]
+ENTRYPOINT ["/tmp/start_service.sh"]
