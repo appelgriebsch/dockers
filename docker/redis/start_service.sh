@@ -63,7 +63,6 @@ if ! [ -z "$REDIS_LOGLVL" ]; then
   sed -i "s/^\(loglevel .*\)$/# \1\nloglevel $REDIS_LOGLVL/" /etc/redis.conf
 fi
 
-sudo ulimit -n 16384
 sudo -u redis /usr/bin/redis-server /etc/redis.conf
 
 # if ! [ -z "$REDIS" ]; then echo hello; fi

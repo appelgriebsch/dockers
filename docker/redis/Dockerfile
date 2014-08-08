@@ -36,6 +36,8 @@ RUN \
   chmod -R 755 /data/redis && \
   sed -i "s/^\(daemonize .*\)$/# \1/" /etc/redis.conf && \
   sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf && \
+  echo "redis soft nproc unlimited" >> /etc/security/limits.d/90-nproc.conf && \ 
+  echo "redis soft nofile unlimited" >> /etc/security/limits.d/90-nproc.conf && \ 
   sed -i "s/^\(Defaults.*requiretty.*\)$/# \1/" /etc/sudoers
 
 # Define mountable directories.
