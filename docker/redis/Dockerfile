@@ -7,8 +7,6 @@
 FROM appelgriebsch/centos:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
-# install and configure redis
-USER root
 # bind to localhost only (will expose a socket for connection)
 ENV REDIS_BIND		127.0.0.1
 # default tcp port for redis server
@@ -17,8 +15,8 @@ ENV REDIS_PORT 		6379
 ENV REDIS_DBCNT		16
 # name of the database dump file
 ENV REDIS_DBFILE 	redis_01.rdb
-# default path to the database filesA
-ENV REDIS_DBDIR		/data/redis/db
+# default path to the database files
+ENV REDIS_DBDIR		/data/redis
 # if master is set, this node is a slave to this master (ip:port)
 ENV REDIS_MASTER	''
 # if dbpwd is set, security check is implied
@@ -26,19 +24,16 @@ ENV REDIS_DBPWD		''
 # log level of redis server
 ENV REDIS_LOGLVL	notice
 
+# install and configure redis
+USER root
 ADD ./start_service.sh /tmp/
-
 RUN \
-  yum -y install redis sudo && \
+  yum -y install redis && \
   yum clean all && \
   mkdir -p /data/redis && \
   chown -R redis:redis /data/redis && \
-  chmod -R 755 /data/redis && \
   sed -i "s/^\(daemonize .*\)$/# \1/" /etc/redis.conf && \
-  sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf && \
-  echo "redis soft nproc unlimited" >> /etc/security/limits.d/90-nproc.conf && \ 
-  echo "redis soft nofile unlimited" >> /etc/security/limits.d/90-nproc.conf && \ 
-  sed -i "s/^\(Defaults.*requiretty.*\)$/# \1/" /etc/sudoers
+  sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf
 
 # Define mountable directories.
 VOLUME ["/data/redis"]
@@ -50,4 +45,5 @@ WORKDIR /data/redis
 EXPOSE 6379
 
 # run service
+USER redis
 ENTRYPOINT ["/tmp/start_service.sh"]
