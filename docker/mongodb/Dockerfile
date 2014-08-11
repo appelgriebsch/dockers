@@ -15,6 +15,14 @@ ENV MONGO_PORT 		27017
 ENV MONGO_DBDIR		/data/mongodb
 # verbose log level of mongodb server
 ENV MONGO_VERBOSE	0
+# mode of node (e.g. master, slave, arbiter, config, shard)
+ENV MONGO_MODE		master
+# name of replica set (if available)
+ENV MONGO_REPSET	''
+# address of master (ip:port)
+ENV MONGO_MASTER	''
+# address of config (ip:port)
+ENV MONGO_CONFIG	''
 
 # install mongodb
 USER root
