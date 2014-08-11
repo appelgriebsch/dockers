@@ -1,5 +1,6 @@
 #
 # MongoDB Dockerfile
+# VERSION 2.6.3
 #
 
 # Pull CentOS 7 base image
