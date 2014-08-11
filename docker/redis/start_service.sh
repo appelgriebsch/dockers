@@ -16,7 +16,7 @@ fi
 echo Checking network binding... $REDIS_BIND
 if [ "$REDIS_BIND" == "127.0.0.1" ]; then
   echo Disable public network binding, connection has to take place via unix socket...
-  sed -i "s/^\(# unixsocket .*\)$/\1\nunixsocket \/data\/redis\/$HOSTNAME\/redis-server.sock/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf
+  sed -i "s/^\(# unixsocket .*\)$/\1\nunixsocket $dbpath\/redis-server.sock/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf
   sed -i "s/^\(# unixsocketperm .*\)$/\1\nunixsocketperm 755/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf
 else
   echo Enabling network binding on IP $REDIS_BIND.
