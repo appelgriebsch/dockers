@@ -3,12 +3,12 @@
 if ! [ -z "$REDIS_DBDIR" ]; then
   if ! [ -d "$REDIS_DBDIR/$HOSTNAME" ]; then
      echo Creating database path $REDIS_DBDIR/$HOSTNAME.
-     mkdir -p $REDIS_DBDIR/$HOSTNAME && \
-     chown -R redis:redis $REDIS_DBDIR && \
-     chmod -R 750 $REDIS_DBDIR
+     mkdir -p $REDIS_DBDIR/$HOSTNAME
   fi
   echo Setting database path to $REDIS_DBDIR.
   cp /etc/redis.conf $REDIS_DBDIR/$HOSTNAME/redis-server.conf && \
+  chown -R redis:redis $REDIS_DBDIR && \
+  chmod -R 750 $REDIS_DBDIR/$HOSTNAME
   dbpath=`echo $REDIS_DBDIR/$HOSTNAME | sed -e 's/\//\\\\\//g'`
   sed -i "s/^\(dir .*\)$/# \1\ndir $dbpath/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf 
 fi
@@ -16,7 +16,8 @@ fi
 echo Checking network binding... $REDIS_BIND
 if [ "$REDIS_BIND" == "127.0.0.1" ]; then
   echo Disable public network binding, connection has to take place via unix socket...
-  sed -i "s/^\(# unixsocket .*\)$/\1\nunixsocket $dbpath\/redis-server.sock/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf
+  socketpath=`echo $REDIS_DBDIR | sed -e 's/\//\\\\\//g'`
+  sed -i "s/^\(# unixsocket .*\)$/\1\nunixsocket $socketpath\/redis-$HOSTNAME.sock/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf
   sed -i "s/^\(# unixsocketperm .*\)$/\1\nunixsocketperm 755/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf
 else
   echo Enabling network binding on IP $REDIS_BIND.
@@ -51,8 +52,8 @@ fi
 echo Checking database node type...$REDIS_MASTER
 if ! [ "$REDIS_MASTER" == "''" ]; then
   # extract ip and port from env variable
-  REDIS_MASTER_IP=`echo $REDIS_MASTER | sed -e 's/^\([0-9.]*\):\([0-9]*\)$/\1/'`
-  REDIS_MASTER_PORT=`echo $REDIS_MASTER | sed -e 's/^\([0-9.]*\):\([0-9]*\)$/\2/'`
+  REDIS_MASTER_IP=`echo $REDIS_MASTER | sed -e 's/^\([0-9A-Za-z._\-]*\):\([0-9]*\)$/\1/'`
+  REDIS_MASTER_PORT=`echo $REDIS_MASTER | sed -e 's/^\([0-9A-Za-z._\-]*\):\([0-9]*\)$/\2/'`
 
   echo Setting up slave node to $REDIS_MASTER_IP $REDIS_MASTER_PORT
   sed -i "s/^\(# slaveof .*\)$/\1\nslaveof $REDIS_MASTER_IP $REDIS_MASTER_PORT/" $REDIS_DBDIR/$HOSTNAME/redis-server.conf 
