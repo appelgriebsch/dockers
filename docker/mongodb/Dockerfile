@@ -1,6 +1,6 @@
 #
 # MongoDB Dockerfile
-# VERSION 2.6.3
+# VERSION 2.6.4
 #
 
 # Pull CentOS 7 base image
@@ -15,16 +15,16 @@ ENV MONGO_PORT 		27017
 ENV MONGO_DBDIR		/data/mongodb
 # verbose log level of mongodb server
 ENV MONGO_VERBOSE	0
-# mode of node (e.g. master, slave, arbiter, config, shard)
-ENV MONGO_MODE		master
+# mode of node (e.g. normal, arbiter, config, shard)
+ENV MONGO_MODE		normal
 # name of replica set (if available)
 ENV MONGO_REPSET	''
-# address of master (ip:port)
+# address of master server (ip:port)
 ENV MONGO_MASTER	''
-# address of config (ip:port)
+# address of config server (ip:port)
 ENV MONGO_CONFIG	''
 
-# install mongodb
+# install mongodb and create a default YAML config file
 USER root
 ADD mongodb.repo /etc/yum.repos.d/
 ADD ./start_service.sh /tmp/
@@ -34,17 +34,26 @@ RUN \
   mkdir -p /data/mongodb && \  
   chown -R mongod:mongod /data/mongodb && \
   chmod -R 755 /data/mongodb && \ 
-  sed -i "s/^\(logpath.*\)$/# \1/" /etc/mongod.conf && \
-  sed -i "s/^\(fork.*\)$/# \1\nfork = false\ndirectoryperdb = true\nsmallfiles = true/" /etc/mongod.conf 
-
+  echo "# new YAML based config file for mongodb > 2.6" > /etc/mongod.conf && \
+  echo "processManagement.fork: false" >> /etc/mongod.conf && \
+  echo "systemLog.verbosity: 0" >> /etc/mongod.conf && \
+  echo "net.bindIp: 127.0.0.1" >> /etc/mongod.conf && \
+  echo "net.port: 27017" >> /etc/mongod.conf && \
+  echo "storage.dbPath: /data/mongodb" >> /etc/mongod.conf && \
+  echo "storage.directoryPerDB: true" >> /etc/mongod.conf && \
+  echo "storage.smallFiles: true" >> /etc/mongod.conf && \
+  echo "storage.journal.enabled: true" >> /etc/mongod.conf
+ 
 # Define mountable directories.
 VOLUME ["/data/mongodb"]
 
 # Define working directory.
 WORKDIR /data/mongodb
 
-# Expose ports.
+# Expose ports (mongodb, config-srv, shard-srv)
 EXPOSE 27017
+EXPOSE 27018
+EXPOSE 27019
 
 # run service
 USER mongod
