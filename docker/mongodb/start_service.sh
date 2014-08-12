@@ -29,10 +29,16 @@ if ! [ -z "$MONGO_PORT" ]; then
   sed -i "s/^\(net.port.*\)$/net.port: $MONGO_PORT/" $MONGO_DBDIR/$HOSTNAME/mongod.conf
 fi
 
-echo Checking verbose logging information... $MONGO_VERBOSE
-if ! [ "$MONGO_VERBOSE" == "0" ]; then
-  echo Enabling verbose log level... $MONGO_VERBOSE
-  sed -i "s/^\(systemLog.verbosity.*\)$/systemLog.verbosity: $MONGO_VERBOSE/" $MONGO_DBDIR/$HOSTNAME/mongod.conf
+echo Checking verbose logging information... $MONGO_LOGLVL
+if ! [ -z "$MONGO_LOGLVL" ]; then
+  echo Enabling verbose log level... $MONGO_LOGLVL
+  sed -i "s/^\(systemLog.verbosity.*\)$/systemLog.verbosity: $MONGO_LOGLVL/" $MONGO_DBDIR/$HOSTNAME/mongod.conf
+fi
+
+echo Checking ReplicaSet information... $MONGO_REPSET
+if ! [ "$MONGO_REPSET" == "''" ]; then
+  echo Joining ReplicaSet... $MONGO_REPSET
+  echo "replication.replSetName: $MONGO_REPSET" >> $MONGO_DBDIR/$HOSTNAME/mongod.conf
 fi
 
 /usr/bin/mongod -f $MONGO_DBDIR/$HOSTNAME/mongod.conf

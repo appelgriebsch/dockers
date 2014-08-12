@@ -13,8 +13,8 @@ ENV MONGO_BIND		127.0.0.1
 ENV MONGO_PORT 		27017
 # default path to the database files
 ENV MONGO_DBDIR		/data/mongodb
-# verbose log level of mongodb server
-ENV MONGO_VERBOSE	0
+# verbose log level of mongodb server (0-5)
+ENV MONGO_LOGLVL	0
 # mode of node (e.g. normal, arbiter, config, shard)
 ENV MONGO_MODE		normal
 # name of replica set (if available)
