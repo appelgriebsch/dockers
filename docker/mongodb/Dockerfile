@@ -50,10 +50,8 @@ VOLUME ["/data/mongodb"]
 # Define working directory.
 WORKDIR /data/mongodb
 
-# Expose ports (mongodb, config-srv, shard-srv)
+# Expose ports (mongodb - 27017, config-srv - 27018, shard-srv - 27019)
 EXPOSE 27017
-EXPOSE 27018
-EXPOSE 27019
 
 # run service
 USER mongod

@@ -40,33 +40,34 @@ if ! [ "$MONGO_REPSET" == "''" ]; then
   echo Joining ReplicaSet... $MONGO_REPSET
   echo "replication.replSetName: $MONGO_REPSET" >> $MONGO_DBDIR/$HOSTNAME/mongod.conf
 
-  MONGO_MASTER_IP = '127.0.0.1'
-  MONGO_MASTER_PORT = $MONGO_PORT
-   
-  if ! [ "$MONGO_HOST" == "''" ]; then
+  MONGO_MASTER_IP='127.0.0.1'
+  MONGO_MASTER_PORT=$MONGO_PORT
+  TEMP_MONGO_PID=0 
+  if ! [ "$MONGO_MASTER" == "''" ]; then
     MONGO_MASTER_IP=`echo $MONGO_MASTER | sed -e 's/^\([0-9A-Za-z._\-]*\):\([0-9]*\)$/\1/'`
     MONGO_MASTER_PORT=`echo $MONGO_MASTER | sed -e 's/^\([0-9A-Za-z._\-]*\):\([0-9]*\)$/\2/'`
   else
     echo Starting temporary background instance to configure cluster...
-    /usr/bin/mongod -f $MONGO_DBDIR/$HOSTNAME/mongod.conf --fork --syslog --pidfile /tmp/mongod.pid
+    TEMP_MONGO_PID=$(/usr/bin/mongod -f $MONGO_DBDIR/$HOSTNAME/mongod.conf --fork --syslog --pidfilepath $MONGO_DBDIR/$HOSTNAME)
   fi
 
   echo "Checking ReplicaSet status on $MONGO_MASTER_IP:$MONGO_MASTER_PORT"
   replSetStatus=`mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --eval "rs.status().ok" --quiet`
   echo ReplicaSet status... $replSetStatus
-  replConfigStatus = 0
+  replConfigStatus=0
 
   if [ "$replSetStatus" == "0" ]; then
-    replConfigStatus=`mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --eval "rs.initialize()" --quiet`
+    replConfigStatus=`mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --eval "rs.initiate().ok" --quiet`
   else
     replConfigStatus=`mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --eval "rs.add($HOSTNAME)" --quiet`
   fi
   echo ReplicaSet initialization status... $replConfigStatus
   
-  if [ -f /tmp/mongod.pid ]; then
+  if ! [ "$TEMP_MONGO_PID" == "0" ]; then
     echo Stopping temporary background instance...
-    dbStatus=`mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --eval "db.shutdownServer()" --quiet`
-    echo $dbStatus
+    PID_FILE=$(find $MONGODB_DIR/$HOSTNAME -type f -name "*.pid")
+    echo Killing mongod instance from $PID_FILE
+    kill < $PID_FILE 
   fi
 fi
 
