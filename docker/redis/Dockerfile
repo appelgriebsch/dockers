@@ -18,15 +18,15 @@ ENV REDIS_DBFILE 	redis_01.rdb
 # default path to the database files
 ENV REDIS_DBDIR		/data/redis
 # if master is set, this node is a slave to this master (ip:port)
-ENV REDIS_MASTER	''
+# ENV REDIS_MASTER
 # if dbpwd is set, security check is implied
-ENV REDIS_DBPWD		''
+# ENV REDIS_DBPWD
 # log level of redis server
 ENV REDIS_LOGLVL	notice
 
 # install and configure redis
 USER root
-ADD ./start_service.sh /tmp/
+ADD ./start_service.sh /
 RUN \
   yum -y install redis && \
   yum clean all && \
@@ -46,4 +46,4 @@ EXPOSE 6379
 
 # run service
 USER redis
-ENTRYPOINT ["/tmp/start_service.sh"]
+ENTRYPOINT ["/start_service.sh"]
