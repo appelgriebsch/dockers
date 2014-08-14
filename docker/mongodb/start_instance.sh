@@ -107,6 +107,7 @@ function configureReplicaSet() {
       addToFile /tmp/initInstance.js "result = rs.add('$HOSTNAME:$MONGO_PORT');"
     else
       addToFile /tmp/initInstance.js "result = rs.add('$HOSTNAME:$MONGO_PORT', { arbiterOnly: true });"
+    fi
   fi
 
   addToFile /tmp/initInstance.js "printjson(result);"
@@ -162,6 +163,7 @@ function startInstance() {
   
   if [ -f /tmp/initInstance.js ]; then
     echo Local configuration script found. Starting instance in background...
+    # Turn on monitor mode to allow switching between background and foreground processes
     set -m
     $INSTANCE_CMD &
     waitForConnection $MONGO_MASTER_IP $MONGO_MASTER_PORT
