@@ -39,8 +39,14 @@ function waitForConnection() {
   
   local host=$1
   local port=$2
-  
-  while ! echo exit | nc -w 3000 $host $port &>/dev/null do echo "Connection to $host:$port failed. Retrying..."; sleep 10; done
+ 
+  while ! echo exit | nc $host $port; do sleep 10; done 
+}
+
+function resolveIPAddress() {
+
+  local myIP=$(ip a s|sed -ne '/127.0.0.1/!{s/^[ \t]*inet[ \t]*\([0-9.]\+\)\/.*$/\1/p}')
+  echo $myIP
 }
 
 function createInstanceDirectories() {
@@ -103,10 +109,11 @@ function configureReplicaSet() {
   addToFile /tmp/initInstance.js "if (replStatus.ok == 0) { result = rs.initiate(); }"
   
   if ! [ "$MONGO_MASTER_IP" == "127.0.0.1" ]; then
+    local myIP=$(resolveIPAddress)
     if [ "$MONGO_TYPE" == "normal" ]; then
-      addToFile /tmp/initInstance.js "result = rs.add('$HOSTNAME:$MONGO_PORT');"
+      addToFile /tmp/initInstance.js "result = rs.add('$myIP:$MONGO_PORT');"
     else
-      addToFile /tmp/initInstance.js "result = rs.add('$HOSTNAME:$MONGO_PORT', { arbiterOnly: true });"
+      addToFile /tmp/initInstance.js "result = rs.add('$myIP:$MONGO_PORT', { arbiterOnly: true });"
     fi
   fi
 
@@ -166,7 +173,8 @@ function startInstance() {
     # Turn on monitor mode to allow switching between background and foreground processes
     set -m
     $INSTANCE_CMD &
-    waitForConnection $MONGO_MASTER_IP $MONGO_MASTER_PORT
+    # wait for connection to MASTER server and LOCALHOST
+    waitForConnection $MONGO_MASTER_IP $MONGO_MASTER_PORT && waitForConnection 127.0.0.1 $MONGO_PORT
     echo Executing local configuration script on server $MONGO_MASTER_IP:$MONGO_MASTER_PORT
     initStatus=$(mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --quiet < /tmp/initInstance.js)
     echo Initialize status: $initStatus
