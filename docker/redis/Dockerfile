@@ -26,7 +26,7 @@ ENV REDIS_LOGLVL	notice
 
 # install and configure redis
 USER root
-ADD ./start_service.sh /
+ADD ./start_instance.sh /
 RUN \
   yum -y install redis && \
   yum clean all && \
@@ -46,4 +46,4 @@ EXPOSE 6379
 
 # run service
 USER redis
-ENTRYPOINT ["/start_service.sh"]
+ENTRYPOINT ["/start_instance.sh"]

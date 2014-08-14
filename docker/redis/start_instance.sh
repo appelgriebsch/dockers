@@ -41,7 +41,7 @@ function createInstanceDirectories() {
     chown -R redis:redis $REDIS_DBDIR && \
     chmod -R 755 $REDIS_DBDIR/$HOSTNAME
     dbpath=$(maskPath $REDIS_DBDIR/$HOSTNAME)
-    replaceInFile $REDIS_DBDIR/$HOSTNAME/redis-server.conf "^\(dir .*\)$" "$dbpath"
+    replaceInFile $REDIS_DBDIR/$HOSTNAME/redis-server.conf "^\(dir .*\)$" "# \1\ndir $dbpath"
   fi
 
   return 0
@@ -113,8 +113,5 @@ function startInstance() {
   /usr/bin/redis-server $REDIS_DBDIR/$HOSTNAME/redis-server.conf
 }
 
-createInstanceDirectories && setupInstanceNetworking &&
+createInstanceDirectories && setupInstanceNetworking && \
  configureInstance && startInstance
-
-# if ! [ -z "$REDIS" ]; then echo hello; fi
-#  sed -i "s/^\(dir .*\)$/# \1\ndir \/data\/redis\/db/" /etc/redis.conf && \
