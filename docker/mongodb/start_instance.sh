@@ -35,6 +35,14 @@ function maskPath() {
   echo $(replaceInString $path $pathDelimiter $replacementPattern)
 }
 
+function waitForConnection() {
+  
+  local host=$1
+  local port=$2
+  
+  while ! echo exit | nc -w 3000 $host $port &>/dev/null do echo "Connection to $host:$port failed. Retrying..."; sleep 10; done
+}
+
 function createInstanceDirectories() {
 
   if [ -n "$MONGO_DBDIR" ]; then
@@ -91,12 +99,18 @@ function configureReplicaSet() {
 
   addToFile /tmp/initInstance.js "// initialize and configure replica sets"
   addToFile /tmp/initInstance.js "var replStatus = rs.status();"
-  addToFile /tmp/initInstance.js "if (replStatus.ok == 0) { rs.initiate(); }"
+  addToFile /tmp/initInstance.js "var result = {};"
+  addToFile /tmp/initInstance.js "if (replStatus.ok == 0) { result = rs.initiate(); }"
   
   if ! [ "$MONGO_MASTER_IP" == "127.0.0.1" ]; then
-    addToFile /tmp/initInstance.js "rs.add($HOSTNAME)"
+    if [ "$MONGO_TYPE" == "normal" ]; then
+      addToFile /tmp/initInstance.js "result = rs.add('$HOSTNAME:$MONGO_PORT');"
+    else
+      addToFile /tmp/initInstance.js "result = rs.add('$HOSTNAME:$MONGO_PORT', { arbiterOnly: true });"
   fi
 
+  addToFile /tmp/initInstance.js "printjson(result);"
+  
   return 0
 }
 
@@ -148,13 +162,14 @@ function startInstance() {
   
   if [ -f /tmp/initInstance.js ]; then
     echo Local configuration script found. Starting instance in background...
+    set -m
     $INSTANCE_CMD &
-    while ! echo exit | nc $MONGO_MASTER_IP $MONGO_MASTER_PORT; do sleep 10; done
-    echo Executing local configuration script on server $MONGO_MASTER_IP
-    mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --quiet < /tmp/initInstance.js
-    fg
+    waitForConnection $MONGO_MASTER_IP $MONGO_MASTER_PORT
+    echo Executing local configuration script on server $MONGO_MASTER_IP:$MONGO_MASTER_PORT
+    initStatus=$(mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --quiet < /tmp/initInstance.js)
+    echo Initialize status: $initStatus
+    fg %1
   else
-    echo Instance configured sucessfully...
     $INSTANCE_CMD
   fi
 
