@@ -18,16 +18,16 @@ ENV MONGO_LOGLVL	0
 # mode of node (e.g. normal, arbiter, config, shard)
 ENV MONGO_MODE		normal
 # name of replica set (if available)
-ENV MONGO_REPSET	''
+# ENV MONGO_REPSET
 # address of master server (ip:port)
-ENV MONGO_MASTER	''
+# ENV MONGO_MASTER
 # address of config server (ip:port)
-ENV MONGO_CONFIG	''
+# ENV MONGO_CONFIG
 
 # install mongodb and create a default YAML config file
 USER root
 ADD mongodb.repo /etc/yum.repos.d/
-ADD ./start_service.sh /tmp/
+ADD ./start_instance.sh /
 RUN \
   yum -y install mongodb-org && \
   yum clean all && \
@@ -55,4 +55,4 @@ EXPOSE 27017
 
 # run service
 USER mongod
-ENTRYPOINT ["/tmp/start_service.sh"]
+ENTRYPOINT ["/start_instance.sh"]
