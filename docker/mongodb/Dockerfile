@@ -16,9 +16,9 @@ ENV MONGO_DBDIR		/data/mongodb
 # verbose log level of mongodb server (0-5)
 ENV MONGO_LOGLVL	0
 # mode of node (e.g. normal, arbiter, config, shard)
-ENV MONGO_MODE		normal
+ENV MONGO_TYPE		normal
 # name of replica set (if available)
-# ENV MONGO_REPSET
+# ENV MONGO_REPLSET
 # address of master server (ip:port)
 # ENV MONGO_MASTER
 # address of config server (ip:port)
@@ -29,7 +29,7 @@ USER root
 ADD mongodb.repo /etc/yum.repos.d/
 ADD ./start_instance.sh /
 RUN \
-  yum -y install mongodb-org && \
+  yum -y install nc mongodb-org && \
   yum clean all && \
   mkdir -p /data/mongodb && \  
   chown -R mongod:mongod /data/mongodb && \

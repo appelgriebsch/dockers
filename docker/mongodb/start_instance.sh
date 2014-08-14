@@ -78,8 +78,8 @@ function setupInstanceNetworking() {
 
 function configureReplicaSet() {
 
-  echo Joining ReplicaSet... $MONGO_REPSET
-  addToFile $MONGO_DBDIR/$HOSTNAME/mongod.conf "replication.replSetName: $MONGO_REPSET" 
+  echo Joining ReplicaSet... $MONGO_REPLSET
+  addToFile $MONGO_DBDIR/$HOSTNAME/mongod.conf "replication.replSetName: $MONGO_REPLSET" 
 
   MONGO_MASTER_IP='127.0.0.1'
   MONGO_MASTER_PORT=$MONGO_PORT
@@ -87,6 +87,14 @@ function configureReplicaSet() {
   if [ -n "$MONGO_MASTER" ]; then
     MONGO_MASTER_IP=$(replaceInString $MONGO_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\1")
     MONGO_MASTER_PORT=$(replaceInString $MONGO_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\2")
+  fi
+
+  addToFile /tmp/initInstance.js "// initialize and configure replica sets"
+  addToFile /tmp/initInstance.js "var replStatus = rs.status();"
+  addToFile /tmp/initInstance.js "if (replStatus.ok == 0) { rs.initiate(); }"
+  
+  if ! [ "$MONGO_MASTER_IP" == "127.0.0.1" ]; then
+    addToFile /tmp/initInstance.js "rs.add($HOSTNAME)"
   fi
 
   return 0
@@ -110,10 +118,10 @@ function configureInstance() {
     sed -i "s/^\(systemLog.verbosity.*\)$/systemLog.verbosity: $MONGO_LOGLVL/" $MONGO_DBDIR/$HOSTNAME/mongod.conf
   fi
   
-  echo Checking instance type... $MONGO_MODE
-  case $MONGO_MODE in
+  echo Checking instance type... $MONGO_TYPE
+  case $MONGO_TYPE in
     normal)
-      if [ -n "$MONGO_REPSET" ]; then
+      if [ -n "$MONGO_REPLSET" ]; then
         configureReplicaSet
       fi
       ;;
@@ -127,7 +135,7 @@ function configureInstance() {
       configureShardSrv
       ;;
     *)
-      echo Unknown instance type: $MONGO_MODE
+      echo Unknown instance type: $MONGO_TYPE
       exit 1
   esac 
 
@@ -135,8 +143,22 @@ function configureInstance() {
 }
 
 function startInstance() {
+ 
+  INSTANCE_CMD="/usr/bin/mongod -f $MONGO_DBDIR/$HOSTNAME/mongod.conf"
+  
+  if [ -f /tmp/initInstance.js ]; then
+    echo Local configuration script found. Starting instance in background...
+    $INSTANCE_CMD &
+    while ! echo exit | nc $MONGO_MASTER_IP $MONGO_MASTER_PORT; do sleep 10; done
+    echo Executing local configuration script on server $MONGO_MASTER_IP
+    mongo --host $MONGO_MASTER_IP --port $MONGO_MASTER_PORT --quiet < /tmp/initInstance.js
+    fg
+  else
+    echo Instance configured sucessfully...
+    $INSTANCE_CMD
+  fi
 
-  /usr/bin/mongod -f $MONGO_DBDIR/$HOSTNAME/mongod.conf
+  return 0
 }
 
 createInstanceDirectories && setupInstanceNetworking && \
