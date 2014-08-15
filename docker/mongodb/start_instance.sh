@@ -45,8 +45,15 @@ function waitForConnection() {
 
 function resolveIPAddress() {
 
-  local myIP=$(ip a s|sed -ne '/127.0.0.1/!{s/^[ \t]*inet[ \t]*\([0-9.]\+\)\/.*$/\1/p}')
-  echo $myIP
+  local host=$1
+  
+  if [ $host == $HOSTNAME ]; then
+    local myIP=$(ip a s|sed -ne '/127.0.0.1/!{s/^[ \t]*inet[ \t]*\([0-9.]\+\)\/.*$/\1/p}')
+    echo $myIP
+  else
+    local remoteIP=$(ping -q -c 1 -t 1 $host | grep PING | sed -e "s/^[^(]*[(]//" | sed -e "s/[)].*$//")
+    echo $remoteIP
+  fi
 }
 
 function createInstanceDirectories() {
@@ -102,14 +109,15 @@ function configureReplicaSet() {
     MONGO_MASTER_IP=$(replaceInString $MONGO_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\1")
     MONGO_MASTER_PORT=$(replaceInString $MONGO_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\2")
   fi
+  
+  local myIP=$(resolveIPAddress $HOSTNAME)
 
   addToFile /tmp/initInstance.js "// initialize and configure replica sets"
   addToFile /tmp/initInstance.js "var replStatus = rs.status();"
   addToFile /tmp/initInstance.js "var result = {};"
-  addToFile /tmp/initInstance.js "if (replStatus.ok == 0) { result = rs.initiate(); }"
+  addToFile /tmp/initInstance.js "if (replStatus.ok == 0) { result = rs.initiate({ _id: '$MONGO_REPLSET', version: 1, members: [ { _id: 0, host: '$myIP:$MONGO_PORT' } ]}); }"
   
   if ! [ "$MONGO_MASTER_IP" == "127.0.0.1" ]; then
-    local myIP=$(resolveIPAddress)
     if [ "$MONGO_TYPE" == "normal" ]; then
       addToFile /tmp/initInstance.js "result = rs.add('$myIP:$MONGO_PORT');"
     else
