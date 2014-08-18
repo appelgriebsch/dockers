@@ -82,14 +82,14 @@ function setupInstanceNetworking() {
     addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "local all all md5"
   else
     echo Enabling network binding on IP $PGSQL_BIND.
-    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#listen_addresses.*\)$/listen_addresses = '$PGSQL_BIND'\n\1/"
+    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#listen_addresses.*\)$" "\1\nlisten_addresses = '$PGSQL_BIND'"
     addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_BIND  md5"
   fi
 
   echo Checking network port... $PGSQL_PORT
   if [ -n "$PGSQL_PORT" ]; then
     echo Enabling network port $PGSQL_PORT.
-    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "s/^\(#port.*\)$" "\1\nport = $PGSQL_PORT"
+    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#port.*\)$" "\1\nport = $PGSQL_PORT"
   fi
 
   return 0
@@ -99,10 +99,9 @@ function configureInstance() {
 
   echo Checking database user settings...
   if [ -n "$PGSQL_DBADMIN" ]; then
-    DBUSR=$(replaceInString $PGSQL_DBADMIN "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\1")
-    DBPWD=$(replaceInString $PGSQL_DBADMIN "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\2")
+    DBUSR=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\1")
+    DBPWD=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\2")
 
-    addToFile /tmp/initInstance.sql "// initialize and configure database instance"
     addToFile /tmp/initInstance.sql "CREATE ROLE $DBUSR PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
     addToFile /tmp/initInstance.sql "CREATE DATABASE $PGSQL_DBNAME OWNER $DBUSR;"
   fi
