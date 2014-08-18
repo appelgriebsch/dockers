@@ -77,14 +77,16 @@ function setupInstanceNetworking() {
   if [ "$PGSQL_BIND" == "127.0.0.1" ]; then
     echo Disable public network binding, connection has to take place via unix socket...
     dbPath=$(maskPath $PGSQL_DBDIR/$HOSTNAME)
+    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#listen_addresses.*\)$" "\1\nlisten_addresses = '$PGSQL_BIND'"
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_directories.*\)$" "\1\nunix_socket_directories = '$dbPath'"
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_group.*\)$" "\1\nunix_socket_group = 'postgres'"
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_permissions.*\)$" "\1\nunix_socket_permissions = '0755'"
     addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "local all all md5"
+    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_BIND/32  md5"
   else
     echo Enabling network binding on IP $PGSQL_BIND.
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#listen_addresses.*\)$" "\1\nlisten_addresses = '$PGSQL_BIND'"
-    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_BIND  md5"
+    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_BIND/32  md5"
   fi
 
   echo Checking network port... $PGSQL_PORT
@@ -124,7 +126,7 @@ function startInstance() {
     # wait for connection to MASTER server and LOCALHOST
     waitForConnection 127.0.0.1 $PGSQL_PORT
     echo Executing local configuration script on server 127.0.0.1:$PGSQL_PORT
-    initStatus=$(/usr/pgsql-9.3/bin/psql --file=/tmp/initInstance.sql)
+    initStatus=$(/usr/pgsql-9.3/bin/psql -h 127.0.0.1 -p $PGSQL_PORT --file=/tmp/initInstance.sql)
     echo Initialize status: $initStatus
     fg %1
   else
