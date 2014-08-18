@@ -76,7 +76,8 @@ function setupInstanceNetworking() {
   echo Checking network binding... $PGSQL_BIND
   if [ "$PGSQL_BIND" == "127.0.0.1" ]; then
     echo Disable public network binding, connection has to take place via unix socket...
-    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_directories.*\)$" "\1\nunix_socket_directories = '$PGSQL_DBDIR/$HOSTNAME'"
+    dbPath=$(maskPath $PGSQL_DBDIR/$HOSTNAME)
+    replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_directories.*\)$" "\1\nunix_socket_directories = '$dbPath'"
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_group.*\)$" "\1\nunix_socket_group = 'postgres'"
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_permissions.*\)$" "\1\nunix_socket_permissions = '0755'"
     addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "local all all md5"
