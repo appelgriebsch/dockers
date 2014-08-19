@@ -1,23 +1,23 @@
 #
 # PostgreSQL Dockerfile
-#
+# VERSION 9.3.5
 
 # Pull CentOS 7 base image
 FROM appelgriebsch/centos:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # bind to localhost only (will expose a socket for connection)
-ENV PGSQL_BIND	  127.0.0.1
+ENV PGSQL_BIND	        127.0.0.1
 # netmask for localhost only binding (specifies the network segment the server listen to)
 ENV PGSQL_NETMASK	127.0.0.1/32
 # default tcp port for postgresql server
 ENV PGSQL_PORT		5432
 # default path to the database files
 ENV PGSQL_DBDIR		/data/pgsql
-# default database user credentials <name:pwd>
-ENV PGSQL_DBADMIN	pgAdmin:pgAdmin!
-# default database for user
-ENV PGSQL_DBNAME	sampleDB
+# default database user credentials <name:pwd> (name is lowercase)
+ENV PGSQL_DBADMIN	pgadmin:pgAdmin123!
+# default database for user (dbname is lowercase)
+ENV PGSQL_DBNAME	sampledb
 # log level of postgresql server
 ENV PGSQL_LOGLVL	notice
 

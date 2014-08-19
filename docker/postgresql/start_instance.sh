@@ -105,8 +105,8 @@ function configureInstance() {
     DBUSR=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\1")
     DBPWD=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\2")
 
-    addToFile /tmp/initInstance.sql "CREATE ROLE '$DBUSR' PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
-    addToFile /tmp/initInstance.sql "CREATE DATABASE '$PGSQL_DBNAME' OWNER '$DBUSR';"
+    addToFile /tmp/initInstance.sql "CREATE ROLE $DBUSR PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
+    addToFile /tmp/initInstance.sql "CREATE DATABASE $PGSQL_DBNAME OWNER $DBUSR;"
   fi
   echo Checking database log level... $PGSQL_LOGLVL
   if [ -n "$PGSQL_LOGLVL" ]; then
