@@ -82,11 +82,11 @@ function setupInstanceNetworking() {
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_group.*\)$" "\1\nunix_socket_group = 'postgres'"
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#unix_socket_permissions.*\)$" "\1\nunix_socket_permissions = '0755'"
     addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "local all all md5"
-    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_BIND/32  md5"
+    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_NETMASK  md5"
   else
     echo Enabling network binding on IP $PGSQL_BIND.
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#listen_addresses.*\)$" "\1\nlisten_addresses = '$PGSQL_BIND'"
-    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_BIND/32  md5"
+    addToFile $PGSQL_DBDIR/$HOSTNAME/pg_hba.conf "host all  all    $PGSQL_NETMASK  md5"
   fi
 
   echo Checking network port... $PGSQL_PORT
@@ -105,8 +105,8 @@ function configureInstance() {
     DBUSR=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\1")
     DBPWD=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\2")
 
-    addToFile /tmp/initInstance.sql "CREATE ROLE $DBUSR PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
-    addToFile /tmp/initInstance.sql "CREATE DATABASE $PGSQL_DBNAME OWNER $DBUSR;"
+    addToFile /tmp/initInstance.sql "CREATE ROLE '$DBUSR' PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
+    addToFile /tmp/initInstance.sql "CREATE DATABASE '$PGSQL_DBNAME' OWNER '$DBUSR';"
   fi
   echo Checking database log level... $PGSQL_LOGLVL
   if [ -n "$PGSQL_LOGLVL" ]; then
