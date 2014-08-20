@@ -1,0 +1,46 @@
+#
+# RethinkDB Dockerfile
+# VERSION 1.13.4
+#
+
+# Pull CentOS 6 base image
+FROM appelgriebsch/centos:centos6
+MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
+
+# bind to localhost only (will expose a socket for connection)
+ENV RETHDB_BIND		127.0.0.1
+# default tcp port for rethinkdb server
+ENV RETHDB_PORT 	28015
+# default path to the database files
+ENV RETHDB_DBDIR	/data/rethinkdb
+# verbose log level of rethinkdb server (0-5)
+ENV RETHDB_LOGLVL	0
+# address of master server (ip:port)
+# ENV RETHDB_MASTER
+
+# install rethinkdb and create a default config file
+USER root
+ADD rethinkdb.repo /etc/yum.repos.d/
+ADD ./start_instance.sh /
+RUN \
+  yum -y install nc rethinkdb && \
+  yum clean all && \
+  mkdir -p /data/rethinkdb && \  
+  chown -R rethinkdb:rethinkdb /data/rethinkdb && \
+  chmod -R 755 /data/rethinkdb && \ 
+  sed -i "s/^\(# runuser.*\)$/# \1\nrunuser=rethinkdb/" /etc/rethinkdb/default.conf.sample && \
+  sed -i "s/^\(# rungroup.*\)$/# \1\nrungroup=rethinkdb/" /etc/rethinkdb/default.conf.sample && \
+  sed -i "s/^\(# directory.*\)$/# \1\ndirectory=\/data\/rethinkdb/" /etc/rethinkdb/default.conf.sample 
+  
+# Define mountable directories.
+VOLUME ["/data/rethinkdb"]
+
+# Define working directory.
+WORKDIR /data/rethinkdb
+
+# Expose ports 
+EXPOSE 28015
+
+# run service
+USER rethinkdb
+ENTRYPOINT ["/start_instance.sh"]
