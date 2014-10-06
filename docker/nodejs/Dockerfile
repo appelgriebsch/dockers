@@ -11,7 +11,7 @@ ENV NODEJS_DIR		/data/nodejs
 
 # install nodejs
 USER root
-ADD ./start_instance.sh /
+# ADD ./start_instance.sh /
 RUN \
   curl -sL https://rpm.nodesource.com/setup | bash - && \
   yum install -y nodejs gcc-c++ make && \
