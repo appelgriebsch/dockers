@@ -22,7 +22,7 @@ ENV MONGO_SERVER	127.0.0.1:27017
 # install and configure sharelatex
 USER root
 ADD ./start_instance.sh /
-ADD ./texlive-2014-full.profile /tmp
+ADD ./texlive-2014-full.profile /tmp/
 RUN \
   yum -y install git aspell aspell-en zlib-devel wget tar perl-Digest-MD5 && \
   yum clean all && \
