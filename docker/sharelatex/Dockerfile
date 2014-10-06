@@ -43,7 +43,7 @@ RUN \
   chown -R sharelatex:sharelatex /data/sharelatex
   
 # path env
-ENV PATH=/usr/local/texlive/2014/bin/x86_64-linux:$PATH
+ENV PATH          /usr/local/texlive/2014/bin/x86_64-linux:$PATH
   
 # Define mountable directories.
 VOLUME ["/data/sharelatex"]
