@@ -19,7 +19,7 @@ RUN \
   npm install -g grunt-cli gulp bower browserify && \
   npm cache clean && \
   mkdir -p /data/nodejs && \
-  adduser --system --home /data/nodejs --no-create-home --group nodejs && \
+  adduser --system --home-dir /data/nodejs --no-create-home --user-group nodejs && \
   chown -R nodejs:nodejs /data/nodejs
 
 # Define mountable directories.
