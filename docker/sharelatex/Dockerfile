@@ -8,19 +8,16 @@ FROM appelgriebsch/nodejs:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # use external redis server found under this address (ip:port)
-ENV REDIS_SERVER		  127.0.0.1:6379
+ENV REDIS_SERVER      127.0.0.1:6379
 # password information to connect to external redis server (if required)
 # ENV REDIS_PWD
 
 # use external mongodb server found under this address (ip:port)
-ENV MONGO_SERVER	    127.0.0.1:27017
+ENV MONGO_SERVER      127.0.0.1:27017
 # user information to connect to external mongodb server (if required)
 # ENV MONGO_USER
 # password information to connect to external mongodb server (if required)
 # ENV MONGO_PWD
-
-# default path to the sharelatex files
-ENV SHARELATEX_DIR		/data/sharelatex
 
 # install and configure sharelatex
 USER root
@@ -47,7 +44,7 @@ RUN \
   chown -R sharelatex:sharelatex /data/sharelatex
   
 # path env
-ENV PATH            /usr/local/texlive/2014/bin/x86_64-linux:$PATH
+ENV PATH      /usr/local/texlive/2014/bin/x86_64-linux:$PATH
   
 # Define mountable directories.
 VOLUME ["/data/sharelatex"]
