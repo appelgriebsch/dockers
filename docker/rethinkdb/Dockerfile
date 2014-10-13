@@ -21,7 +21,6 @@ ENV RETHDB_LOGLVL	0
 # install rethinkdb and create a default config file
 USER root
 ADD rethinkdb.repo /etc/yum.repos.d/
-ADD ./start_instance.sh /
 RUN \
   yum -y install nc rethinkdb && \
   yum clean all && \
@@ -31,6 +30,11 @@ RUN \
   sed -i "s/^\(# runuser.*\)$/# \1\nrunuser=rethinkdb/" /etc/rethinkdb/default.conf.sample && \
   sed -i "s/^\(# rungroup.*\)$/# \1\nrungroup=rethinkdb/" /etc/rethinkdb/default.conf.sample && \
   sed -i "s/^\(# directory.*\)$/# \1\ndirectory=\/data\/rethinkdb/" /etc/rethinkdb/default.conf.sample 
+
+# add startup-script
+ADD ./start_instance.sh /
+RUN \
+  chmod 755 /start_instance.sh
   
 # Define mountable directories.
 VOLUME ["/data/rethinkdb"]
