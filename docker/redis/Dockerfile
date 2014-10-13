@@ -26,7 +26,6 @@ ENV REDIS_LOGLVL	notice
 
 # install and configure redis
 USER root
-ADD ./start_instance.sh /
 RUN \
   yum -y install redis && \
   yum clean all && \
@@ -34,6 +33,11 @@ RUN \
   chown -R redis:redis /data/redis && \
   sed -i "s/^\(daemonize .*\)$/# \1/" /etc/redis.conf && \
   sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf
+
+# add startup-script
+ADD ./start_instance.sh /
+RUN \
+  chmod 755 /start_instance.sh
 
 # Define mountable directories.
 VOLUME ["/data/redis"]
