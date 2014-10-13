@@ -50,8 +50,8 @@ function configureInstance() {
   if [ -n "$REDIS_SERVER" ]; then
 
 	  # extract ip and port from env variable
-    REDIS_IP=$(replaceInString $REDIS_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\1")
-    REDIS_PORT=$(replaceInString $REDIS_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\2")
+    REDIS_IP=$(replaceInString $REDIS_SERVER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\1")
+    REDIS_PORT=$(replaceInString $REDIS_SERVER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\2")
 	
   	echo Redis connection goes to $REDIS_IP:$REDIS_PORT
   	
