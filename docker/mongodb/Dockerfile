@@ -27,7 +27,7 @@ ENV MONGO_TYPE		normal
 # install mongodb and create a default YAML config file
 USER root
 ADD mongodb.repo /etc/yum.repos.d/
-ADD ./start_instance.sh /
+## install mongodb from 10gen
 RUN \
   yum -y install nc mongodb-org && \
   yum clean all && \
@@ -44,6 +44,11 @@ RUN \
   echo "storage.smallFiles: true" >> /etc/mongod.conf && \
   echo "storage.journal.enabled: true" >> /etc/mongod.conf
  
+# add startup-script
+ADD ./start_instance.sh /
+RUN \
+  chmod 755 /start_instance.sh
+
 # Define mountable directories.
 VOLUME ["/data/mongodb"]
 

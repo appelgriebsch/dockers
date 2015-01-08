@@ -7,15 +7,20 @@ FROM appelgriebsch/centos:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 
-# install postgresql server
+# install MySQL server
 USER root
-ADD ./start_instance.sh /
+## install mysql from mysql.org
 RUN \
   yum -y install http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm && \
   yum -y install mysql-community-server && \
   yum clean all && \
   mkdir -p /data/mysql && \
   chown -R mysql:mysql /data/mysql
+
+# add startup-script
+ADD ./start_instance.sh /
+RUN \
+  chmod 755 /start_instance.sh
 
 # Define mountable directories.
 VOLUME ["/data/mysql"]

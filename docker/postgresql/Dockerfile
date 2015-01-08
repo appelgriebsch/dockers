@@ -23,13 +23,17 @@ ENV PGSQL_LOGLVL	notice
 
 # install postgresql server
 USER root
-ADD ./start_instance.sh /
 RUN \
   yum -y install http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm && \
   yum -y install nc postgresql93 postgresql93-contrib postgresql93-docs postgresql93-server postgresql93-plpython postgresql93-plruby && \
   yum clean all && \
   mkdir -p /data/pgsql && \
   chown -R postgres:postgres /data/pgsql
+
+# add startup-script
+ADD ./start_instance.sh /
+RUN \
+  chmod 755 /start_instance.sh
 
 # Define mountable directories.
 VOLUME ["/data/pgsql"]
