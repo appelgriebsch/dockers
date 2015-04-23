@@ -1,10 +1,10 @@
 #
 # MongoDB Dockerfile
-# VERSION 2.6.4
+# VERSION 3.0.2
 #
 
 # Pull CentOS 7 base image
-FROM appelgriebsch/centos:latest
+FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # bind to localhost only (will expose a socket for connection)
@@ -30,9 +30,9 @@ ADD mongodb.repo /etc/yum.repos.d/
 RUN \
   yum -y install nc mongodb-org && \
   yum clean all && \
-  mkdir -p /data/mongodb && \  
+  mkdir -p /data/mongodb && \
   chown -R mongod:mongod /data/mongodb && \
-  chmod -R 755 /data/mongodb && \ 
+  chmod -R 755 /data/mongodb && \
   echo "# new YAML based config file for mongodb > 2.6" > /etc/mongod.conf && \
   echo "processManagement.fork: false" >> /etc/mongod.conf && \
   echo "systemLog.verbosity: 0" >> /etc/mongod.conf && \
@@ -42,7 +42,7 @@ RUN \
   echo "storage.directoryPerDB: true" >> /etc/mongod.conf && \
   echo "storage.smallFiles: true" >> /etc/mongod.conf && \
   echo "storage.journal.enabled: true" >> /etc/mongod.conf
- 
+
 # add startup-script
 ADD ./start_instance.sh /
 RUN \
@@ -56,6 +56,8 @@ WORKDIR /data/mongodb
 
 # Expose ports (mongodb - 27017, config-srv - 27018, shard-srv - 27019)
 EXPOSE 27017
+EXPOSE 27018
+EXPOSE 27019
 
 # run service
 USER mongod
