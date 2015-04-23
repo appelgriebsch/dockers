@@ -1,11 +1,12 @@
 #
 # MongoDB Dockerfile
-# VERSION 3.0.2
+# VERSION 2.6.9
 #
 
 # Pull CentOS 7 base image
 FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
+LABEL VERSION="2.6.9"
 
 # bind to localhost only (will expose a socket for connection)
 ENV MONGO_BIND		127.0.0.1
@@ -15,6 +16,8 @@ ENV MONGO_PORT 		27017
 ENV MONGO_LOGLVL	0
 # mode of node (e.g. normal, arbiter, config, shard)
 ENV MONGO_TYPE		normal
+# default mongodb directory
+ENV MONGO_DBDIR /data/mongodb
 # name of replica set (if available)
 # ENV MONGO_REPLSET
 # address of master server (ip:port)
@@ -30,9 +33,9 @@ ADD mongodb.repo /etc/yum.repos.d/
 RUN \
   yum -y install nc mongodb-org && \
   yum clean all && \
-  mkdir -p /data/mongodb && \
-  chown -R mongod:mongod /data/mongodb && \
-  chmod -R 755 /data/mongodb && \
+  mkdir -p $MONGO_DBDIR && \
+  chown -R mongod:mongod $MONGO_DBDIR && \
+  chmod -R 755 $MONGO_DBDIR && \
   echo "# new YAML based config file for mongodb > 2.6" > /etc/mongod.conf && \
   echo "processManagement.fork: false" >> /etc/mongod.conf && \
   echo "systemLog.verbosity: 0" >> /etc/mongod.conf && \
@@ -49,15 +52,13 @@ RUN \
   chmod 755 /start_instance.sh
 
 # Define mountable directories.
-VOLUME ["/data/mongodb"]
+VOLUME $MONGO_DBDIR
 
 # Define working directory.
-WORKDIR /data/mongodb
+WORKDIR $MONGO_DBDIR
 
 # Expose ports (mongodb - 27017, config-srv - 27018, shard-srv - 27019)
-EXPOSE 27017
-EXPOSE 27018
-EXPOSE 27019
+EXPOSE $MONGO_PORT
 
 # run service
 USER mongod
