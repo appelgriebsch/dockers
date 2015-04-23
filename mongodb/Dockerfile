@@ -43,7 +43,7 @@ RUN \
   echo "net.port: 27017" >> /etc/mongod.conf && \
   echo "storage.dbPath: /data/mongodb" >> /etc/mongod.conf && \
   echo "storage.directoryPerDB: true" >> /etc/mongod.conf && \
-  echo "storage.smallFiles: true" >> /etc/mongod.conf && \
+  echo "storage.mmapv1.smallFiles: true" >> /etc/mongod.conf && \
   echo "storage.journal.enabled: true" >> /etc/mongod.conf
 
 # add startup-script
