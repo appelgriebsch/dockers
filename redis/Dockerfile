@@ -6,6 +6,7 @@
 # Pull CentOS 7 base image
 FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
+LABEL VERSION="2.8.19"
 
 # bind to localhost only (will expose a socket for connection)
 ENV REDIS_BIND		127.0.0.1
@@ -13,6 +14,8 @@ ENV REDIS_BIND		127.0.0.1
 ENV REDIS_PORT 		6379
 # default no. of databases
 ENV REDIS_DBCNT		16
+# default database directory
+ENV REDIS_DBDIR /data/redis
 # name of the database dump file
 ENV REDIS_DBFILE 	redis_01.rdb
 # if master is set, this node is a slave to this master (ip:port)
@@ -27,8 +30,9 @@ USER root
 RUN \
   yum -y install redis && \
   yum clean all && \
-  mkdir -p /data/redis && \
-  chown -R redis:redis /data/redis && \
+  mkdir -p $REDIS_DBDIR && \
+  chown -R redis:redis $REDIS_DBDIR && \
+  chmod -R 755 $REDIS_DBDIR && \
   sed -i "s/^\(daemonize .*\)$/# \1/" /etc/redis.conf && \
   sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf
 
@@ -38,13 +42,13 @@ RUN \
   chmod 755 /start_instance.sh
 
 # Define mountable directories.
-VOLUME ["/data/redis"]
+VOLUME $REDIS_DBDIR
 
 # Define working directory.
-WORKDIR /data/redis
+WORKDIR $REDIS_DBDIR
 
 # Expose ports.
-EXPOSE 6379
+EXPOSE $REDIS_PORT
 
 # run service
 USER redis
