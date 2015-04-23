@@ -1,10 +1,10 @@
 #
 # Redis Dockerfile
-# VERSION 2.8.13
+# VERSION 2.8.19
 #
 
 # Pull CentOS 7 base image
-FROM appelgriebsch/centos:latest
+FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 
 # bind to localhost only (will expose a socket for connection)
