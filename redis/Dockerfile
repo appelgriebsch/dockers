@@ -15,8 +15,6 @@ ENV REDIS_PORT 		6379
 ENV REDIS_DBCNT		16
 # name of the database dump file
 ENV REDIS_DBFILE 	redis_01.rdb
-# default path to the database files
-ENV REDIS_DBDIR		/data/redis
 # if master is set, this node is a slave to this master (ip:port)
 # ENV REDIS_MASTER
 # if dbpwd is set, security check is implied

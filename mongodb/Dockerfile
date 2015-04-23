@@ -11,8 +11,6 @@ MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 ENV MONGO_BIND		127.0.0.1
 # default tcp port for mongo server
 ENV MONGO_PORT 		27017
-# default path to the database files
-ENV MONGO_DBDIR		/data/mongodb
 # verbose log level of mongodb server (0-5)
 ENV MONGO_LOGLVL	0
 # mode of node (e.g. normal, arbiter, config, shard)
@@ -27,6 +25,7 @@ ENV MONGO_TYPE		normal
 # install mongodb and create a default YAML config file
 USER root
 ADD mongodb.repo /etc/yum.repos.d/
+
 ## install mongodb from 10gen
 RUN \
   yum -y install nc mongodb-org && \
