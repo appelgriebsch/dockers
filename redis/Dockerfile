@@ -39,7 +39,7 @@ RUN \
   cd / && rm -rf /tmp/redis* && \
   yum remove -y tar make gcc glibc-headers glibc-devel cpp kernel-plus-headers libmpc mpfr && \
   yum clean all && \
-  adduser -b $REDIS_DBDIR -r  redis
+  adduser -b $REDIS_DBDIR -r redis && \
   mkdir -p $REDIS_DBDIR && \
   chown -R redis:redis $REDIS_DBDIR && \
   chmod -R 755 $REDIS_DBDIR && \
