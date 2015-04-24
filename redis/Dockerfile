@@ -37,7 +37,7 @@ RUN \
   make PREFIX=/usr && make PREFIX=/usr install && \
   cp redis.conf /etc && \
   cd / && rm -rf /tmp/redis* && \
-  yum uninstall -y tar make gcc glibc-headers glibc-devel cpp kernel-plus-headers libmpc mpfr && \
+  yum remove -y tar make gcc glibc-headers glibc-devel cpp kernel-plus-headers libmpc mpfr && \
   yum clean all && \
   adduser -b $REDIS_DBDIR -r  redis
   mkdir -p $REDIS_DBDIR && \
