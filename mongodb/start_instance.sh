@@ -122,6 +122,7 @@ function configureReplicaSet() {
       addToFile /tmp/initInstance.js "result = rs.add('$myIP:$MONGO_PORT');"
     else
       addToFile /tmp/initInstance.js "result = rs.add('$myIP:$MONGO_PORT', { arbiterOnly: true });"
+      replaceInFile $MONGO_DBDIR/$HOSTNAME/mongod.conf "^\(storage.journal.enabled.*\)$" "storage.journal.enabled: false"
     fi
   fi
 
