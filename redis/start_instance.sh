@@ -97,6 +97,18 @@ function configureInstance() {
     REDIS_MASTER_IP=$(replaceInString $REDIS_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\1")
     REDIS_MASTER_PORT=$(replaceInString $REDIS_MASTER "^\([0-9A-Za-z._\-]*\):\([0-9]*\)$" "\2")
 
+    # cross-check for linked services (REDIS_MASTER_IP contains name of linked container)
+    # build name of environment variable containing linked service ip_address
+    ENV_LINKED_REDIS_IP=${REDIS_MASTER_IP^^}_PORT_${REDIS_MASTER_PORT}_TCP_ADDR
+    ENV_LINKED_REDIS_PORT=${REDIS_MASTER_IP^^}_PORT_${REDIS_MASTER_PORT}_TCP_PORT
+
+    # try to figure out linked service IP & port
+    if [ -n "${!ENV_LINKED_REDIS_IP}" ]; then
+      # replace IP & port of redis master with linked container settings
+      REDIS_MASTER_IP=${!ENV_LINKED_REDIS_IP}
+      REDIS_MASTER_PORT=${!ENV_LINKED_REDIS_PORT}
+    fi
+
     echo Setting up slave node to $REDIS_MASTER_IP $REDIS_MASTER_PORT
     replaceInFile $REDIS_DBDIR/$HOSTNAME/redis-server.conf "^\(# slaveof .*\)$" "\1\nslaveof $REDIS_MASTER_IP $REDIS_MASTER_PORT"
   fi
