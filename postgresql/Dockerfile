@@ -30,8 +30,9 @@ RUN \
   yum -y install http://yum.postgresql.org/$PG_VERSION/redhat/rhel-6-x86_64/pgdg-redhat94-9.4-1.noarch.rpm  && \
   yum -y install nc postgresql94 postgresql94-contrib postgresql94-docs postgresql94-server postgresql94-plpython && \
   yum clean all && \
-  mkdir -p /data/pgsql && \
-  chown -R postgres:postgres /data/pgsql
+  mkdir -p $PGSQL_DBDIR && \
+  chown -R postgres:postgres $PGSQL_DBDIR && \
+  chmod -R 755 $PGSQL_DBDIR
 
 # add startup-script
 ADD ./start_instance.sh /
@@ -39,13 +40,13 @@ RUN \
   chmod 755 /start_instance.sh
 
 # Define mountable directories.
-VOLUME ["/data/pgsql"]
+VOLUME $PGSQL_DBDIR
 
 # Define working directory.
-WORKDIR /data/pgsql
+WORKDIR $PGSQL_DBDIR
 
 # Expose ports.
-EXPOSE 5432
+EXPOSE $PGSQL_PORT
 
 # run service
 USER postgres
