@@ -66,7 +66,7 @@ function createInstanceDirectories() {
   echo Setting database path to $PGSQL_DBDIR.
   chown -R postgres:postgres $PGSQL_DBDIR && \
   chmod -R 755 $PGSQL_DBDIR/$HOSTNAME
-  /usr/pgsql-9.3/bin/initdb -D $PGSQL_DBDIR/$HOSTNAME -E UTF-8
+  /usr/pgsql-$PG_VERSION/bin/initdb -D $PGSQL_DBDIR/$HOSTNAME -E UTF-8
 
   return 0
 }
@@ -105,9 +105,10 @@ function configureInstance() {
     DBUSR=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\1")
     DBPWD=$(replaceInString $PGSQL_DBADMIN "^\(.*\):\(.*\)$" "\2")
 
-    addToFile /tmp/initInstance.sql "CREATE ROLE $DBUSR PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
-    addToFile /tmp/initInstance.sql "CREATE DATABASE $PGSQL_DBNAME OWNER $DBUSR;"
+    addToFile /tmp/initInstance.sql "CREATE ROLE ${DBUSR,,} PASSWORD '$DBPWD' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
+    addToFile /tmp/initInstance.sql "CREATE DATABASE ${PGSQL_DBNAME,,} OWNER ${DBUSR,,};"
   fi
+
   echo Checking database log level... $PGSQL_LOGLVL
   if [ -n "$PGSQL_LOGLVL" ]; then
     replaceInFile $PGSQL_DBDIR/$HOSTNAME/postgresql.conf "^\(#log_min_messages .*\)$" "\1\nlog_min_messages = $PGSQL_LOGLVL"
@@ -116,7 +117,7 @@ function configureInstance() {
 
 function startInstance() {
 
-  INSTANCE_CMD="/usr/pgsql-9.3/bin/postgres -D $PGSQL_DBDIR/$HOSTNAME"
+  INSTANCE_CMD="/usr/pgsql-$PG_VERSION/bin/postgres -D $PGSQL_DBDIR/$HOSTNAME"
 
   if [ -f /tmp/initInstance.sql ]; then
     echo Local configuration script found. Starting instance in background...
@@ -126,7 +127,7 @@ function startInstance() {
     # wait for connection to MASTER server and LOCALHOST
     waitForConnection 127.0.0.1 $PGSQL_PORT
     echo Executing local configuration script on server 127.0.0.1:$PGSQL_PORT
-    initStatus=$(/usr/pgsql-9.3/bin/psql -h 127.0.0.1 -p $PGSQL_PORT --file=/tmp/initInstance.sql)
+    initStatus=$(/usr/pgsql-$PG_VERSION/bin/psql -h 127.0.0.1 -p $PGSQL_PORT --file=/tmp/initInstance.sql)
     echo Initialize status: $initStatus
     fg %1
   else
