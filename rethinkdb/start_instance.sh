@@ -36,17 +36,17 @@ function maskPath() {
 }
 
 function waitForConnection() {
-  
+
   local host=$1
   local port=$2
- 
-  while ! echo exit | nc $host $port; do sleep 10; done 
+
+  while ! echo exit | nc $host $port; do sleep 10; done
 }
 
 function resolveIPAddress() {
 
   local host=$1
-  
+
   if [ $host == $HOSTNAME ]; then
     local myIP=$(ip a s|sed -ne '/127.0.0.1/!{s/^[ \t]*inet[ \t]*\([0-9.]\+\)\/.*$/\1/p}')
     echo $myIP
@@ -58,19 +58,19 @@ function resolveIPAddress() {
 
 function createInstanceDirectories() {
 
-  if [ -n "$RETHDB_DBDIR" ]; then
+  if [ -n "$RTDB_DBDIR" ]; then
 
-    if ! [ -d "$RETHDB_DBDIR/$HOSTNAME" ]; then
-       echo Creating database path $RETHDB_DBDIR/$HOSTNAME.
-       mkdir -p $RETHDB_DBDIR/$HOSTNAME
+    if ! [ -d "$RTDB_DBDIR/$HOSTNAME" ]; then
+       echo Creating database path $RTDB_DBDIR/$HOSTNAME.
+       mkdir -p $RTDB_DBDIR/$HOSTNAME
     fi
 
-    echo Setting database path to $RETHDB_DBDIR.
-    cp /etc/rethinkdb/default.conf.sample $RETHDB_DBDIR/$HOSTNAME/rethinkdb.conf && \
-    chown -R rethinkdb:rethinkdb $RETHDB_DBDIR && \
-    chmod -R 755 $RETHDB_DBDIR/$HOSTNAME
-    dbpath=$(maskPath $RETHDB_DBDIR/$HOSTNAME)
-    replaceInFile $RETHDB_DBDIR/$HOSTNAME/rethinkdb.conf "^\(directory.*\)$" "directory=$dbpath"
+    echo Setting database path to $RTDB_DBDIR.
+    cp /etc/rethinkdb/default.conf.sample $RTDB_DBDIR/$HOSTNAME/rethinkdb.conf && \
+    chown -R rethinkdb:rethinkdb $RTDB_DBDIR && \
+    chmod -R 755 $RTDB_DBDIR/$HOSTNAME
+    dbpath=$(maskPath $RTDB_DBDIR/$HOSTNAME)
+    replaceInFile $RTDB_DBDIR/$HOSTNAME/rethinkdb.conf "^\(directory.*\)$" "directory=$dbpath"
   fi
 
   return 0
@@ -78,20 +78,20 @@ function createInstanceDirectories() {
 
 function setupInstanceNetworking() {
 
-  echo Checking network binding... $RETHDB_BIND
+  echo Checking network binding... $RTDB_BIND
 
-  if [ "$RETHDB_BIND" == "127.0.0.1" ]; then
+  if [ "$RTDB_BIND" == "127.0.0.1" ]; then
     echo Disable public network binding, connection has to take place via unix socket...
-    socketpath=$(maskPath $RETHDB_DBDIR/$HOSTNAME)
+    socketpath=$(maskPath $RTDB_DBDIR/$HOSTNAME)
   else
-    echo Enabling network binding on IP $RETHDB_BIND.
-    replaceInFile $RETHDB_DBDIR/$HOSTNAME/rethinkdb.conf "^\(# bind.*\)$" "# \1\nbind $RETHDB_BIND"
+    echo Enabling network binding on IP $RTDB_BIND.
+    replaceInFile $RTDB_DBDIR/$HOSTNAME/rethinkdb.conf "^\(# bind.*\)$" "# \1\nbind $RTDB_BIND"
   fi
 
-  echo Checking network port... $RETHDB_PORT
-  if [ -n "$RETHDB_PORT" ]; then
-    echo Enabling network port $RETHDB_PORT.
-    replaceInFile $RETHDB_DBDIR/$HOSTNAME/rethinkdb.conf "^\(# driver-port.*\)$" "# \1\nport $RETHDB_PORT"
+  echo Checking network port... $RTDB_PORT
+  if [ -n "$RTDB_PORT" ]; then
+    echo Enabling network port $RTDB_PORT.
+    replaceInFile $RTDB_DBDIR/$HOSTNAME/rethinkdb.conf "^\(# driver-port.*\)$" "# \1\nport $RTDB_PORT"
   fi
 
   return 0
@@ -103,7 +103,7 @@ function configureInstance() {
 }
 
 function startInstance() {
- 
+
   return 0
 }
 
