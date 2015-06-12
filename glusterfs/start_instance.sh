@@ -56,6 +56,22 @@ function resolveIPAddress() {
   fi
 }
 
+function waitForDaemon() {
+
+  TEST_CMD="gluster pool list"
+
+  $TEST_CMD
+
+  while [ $? -ne 0 ]; do
+
+    sleep 10
+
+    # exec test command
+    $TEST_CMD
+
+  done
+}
+
 function createInstanceDirectories() {
 
   if [ -n "$GLUSTER_DIR" ]; then
@@ -112,7 +128,7 @@ function configureInstance() {
   addToFile /tmp/initInstance.sh "gluster volume create $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF transport tcp $HOSTNAME:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME force"
   addToFile /tmp/initInstance.sh "gluster volume start $VOLUME_NAME"
   addToFile /tmp/initInstance.sh "else"
-  addToFile /tmp/initInstance.sh "gluster volume add-brick $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF $HOSTNAME:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME"
+  addToFile /tmp/initInstance.sh "gluster volume add-brick $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF $HOSTNAME:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME"
   addToFile /tmp/initInstance.sh "gluster volume rebalance $VOLUME_NAME start"
   addToFile /tmp/initInstance.sh "fi"
   return 0
@@ -130,7 +146,7 @@ function startInstance() {
     $INSTANCE_CMD &
 
     # wait for daemon to start
-    waitForConnection 127.0.0.1 24007
+    waitForDaemon
 
     echo Executing local configuration script on server 127.0.0.1
     chmod 755 /tmp/initInstance.sh
