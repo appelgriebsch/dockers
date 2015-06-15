@@ -91,7 +91,7 @@ function setupInstanceNetworking() {
 
 function configureInstance() {
 
-  IMAGE_FILE=$GLUSTER_DIR/$HOSTNAME.img
+  local IMAGE_FILE=$GLUSTER_DIR/$HOSTNAME.img
 
   echo Creating Image $IMAGE_FILE with size $IMAGE_SIZE
   touch $IMAGE_FILE
@@ -101,18 +101,24 @@ function configureInstance() {
   echo Mounting $IMAGE_FILE to $GLUSTER_DIR/$HOSTNAME
   mount -t xfs -o loop $IMAGE_FILE $GLUSTER_DIR/$HOSTNAME
 
+  echo Changing instance UUID...
+  local NODE_ID=$(uuidgen)
+  replaceInFile /var/lib/glusterd/glusterd.info "^\(UUID=.*\)$" "# \1\nUUID=$NODE_ID"
+
+  echo Creating local initInstance script...
   addToFile /tmp/initInstance.sh "#!/bin/bash"
 
   if [ -n "$GLUSTER_PEER" ]; then
-    addToFile /tmp/initInstance.sh "gluster peer probe $GLUSTER_PEER"
+    peerIP=$(resolveIPAddress $GLUSTER_PEER)
+    addToFile /tmp/initInstance.sh "gluster peer probe $peerIP"
   fi
 
-  STRIPE_CONF=""
+  local STRIPE_CONF=""
   if [ -n "$STRIPE_CNT" ]; then
     STRIPE_CONF="stripe $STRIPE_CNT"
   fi
 
-  REPLICA_CONF=""
+  local REPLICA_CONF=""
   if [ -n "$REPLICA_CNT" ]; then
     REPLICA_CONF="replica $REPLICA_CNT"
   fi
@@ -122,15 +128,20 @@ function configureInstance() {
 
   echo Create volume...$VOLUME_NAME
   mkdir -p $GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME
+
+  echo Updating initInstance script...
+  local myIP=$(resolveIPAddress $HOSTNAME)
+
   addToFile /tmp/initInstance.sh "volStatus=\$(gluster volume info $VOLUME_NAME)"
   addToFile /tmp/initInstance.sh "if [ \$? -ne 0 ]; then"
   addToFile /tmp/initInstance.sh "echo \$volStatus"
-  addToFile /tmp/initInstance.sh "gluster volume create $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF transport tcp $HOSTNAME:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME force"
+  addToFile /tmp/initInstance.sh "gluster volume create $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF transport tcp $myIP:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME force"
   addToFile /tmp/initInstance.sh "gluster volume start $VOLUME_NAME"
   addToFile /tmp/initInstance.sh "else"
-  addToFile /tmp/initInstance.sh "gluster volume add-brick $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF $HOSTNAME:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME"
-  addToFile /tmp/initInstance.sh "gluster volume rebalance $VOLUME_NAME start"
+  addToFile /tmp/initInstance.sh "gluster volume add-brick $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF $myIP:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME"
+  # addToFile /tmp/initInstance.sh "gluster volume rebalance $VOLUME_NAME start"
   addToFile /tmp/initInstance.sh "fi"
+
   return 0
 }
 

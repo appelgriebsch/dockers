@@ -33,7 +33,7 @@ USER root
 RUN \
     cd /etc/yum.repos.d/ && \
     curl -L -O http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/glusterfs-epel.repo && \
-    yum -y install glusterfs-server glusterfs-geo-replication glusterfs-api xfsprogs nc && \
+    yum -y install glusterfs-server glusterfs-geo-replication glusterfs-api xfsprogs && \
     mkdir -p $GLUSTER_DIR
 
 # add startup-script
