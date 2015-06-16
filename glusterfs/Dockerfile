@@ -11,8 +11,8 @@ LABEL VERSION="3.7.1"
 # the root folder for the GlusterFS
 ENV GLUSTER_DIR   /data/GlusterFS
 
-# the peer for the GlusterFS cluster
-#ENV GLUSTER_PEER  ''
+# the peers for the GlusterFS cluster
+#ENV GLUSTER_PEERS  ''
 
 # the size of the image file
 ENV IMAGE_SIZE    100MB

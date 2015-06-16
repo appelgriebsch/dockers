@@ -75,12 +75,12 @@ function waitForDaemon() {
 function createInstanceDirectories() {
 
   if [ -n "$GLUSTER_DIR" ]; then
-    echo Creating GlusterFS path $GLUSTER_DIR/$HOSTNAME.
-    mkdir -p $GLUSTER_DIR/$HOSTNAME
+    echo Creating GlusterFS path $GLUSTER_DIR.
+    mkdir -p $GLUSTER_DIR
   fi
 
-  echo Setting GlusterFS path to $GLUSTER_DIR/$HOSTNAME.
-  chmod -R 755 $GLUSTER_DIR/$HOSTNAME
+  echo Setting GlusterFS path to $GLUSTER_DIR.
+  chmod -R 755 $GLUSTER_DIR
   return 0
 }
 
@@ -91,56 +91,59 @@ function setupInstanceNetworking() {
 
 function configureInstance() {
 
-  local IMAGE_FILE=$GLUSTER_DIR/$HOSTNAME.img
+  local NODE_ID=$(uuidgen)
+  local IMAGE_FILE=$GLUSTER_DIR/$NODE_ID.img
+
+  echo Changing instance UUID...$NODE_ID
+  replaceInFile /var/lib/glusterd/glusterd.info "^\(UUID=.*\)$" "# \1\nUUID=$NODE_ID"
 
   echo Creating Image $IMAGE_FILE with size $IMAGE_SIZE
   touch $IMAGE_FILE
   dd if=/dev/zero of=$IMAGE_FILE bs=$IMAGE_SIZE count=1
   mkfs.xfs $IMAGE_FILE
 
-  echo Mounting $IMAGE_FILE to $GLUSTER_DIR/$HOSTNAME
-  mount -t xfs -o loop $IMAGE_FILE $GLUSTER_DIR/$HOSTNAME
-
-  echo Changing instance UUID...
-  local NODE_ID=$(uuidgen)
-  replaceInFile /var/lib/glusterd/glusterd.info "^\(UUID=.*\)$" "# \1\nUUID=$NODE_ID"
-
-  echo Creating local initInstance script...
-  addToFile /tmp/initInstance.sh "#!/bin/bash"
-
-  if [ -n "$GLUSTER_PEER" ]; then
-    peerIP=$(resolveIPAddress $GLUSTER_PEER)
-    addToFile /tmp/initInstance.sh "gluster peer probe $peerIP"
-  fi
-
-  local STRIPE_CONF=""
-  if [ -n "$STRIPE_CNT" ]; then
-    STRIPE_CONF="stripe $STRIPE_CNT"
-  fi
-
-  local REPLICA_CONF=""
-  if [ -n "$REPLICA_CNT" ]; then
-    REPLICA_CONF="replica $REPLICA_CNT"
-  fi
+  echo Mounting $IMAGE_FILE
+  mount -t xfs -o loop $IMAGE_FILE /mnt
 
   echo Create brick...$BRICK_NAME
-  mkdir -p $GLUSTER_DIR/$HOSTNAME/$BRICK_NAME
-
   echo Create volume...$VOLUME_NAME
-  mkdir -p $GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME
+  mkdir -p /mnt/$BRICK_NAME/$VOLUME_NAME
 
-  echo Updating initInstance script...
-  local myIP=$(resolveIPAddress $HOSTNAME)
+  if [ -n "$GLUSTER_PEERS" ]; then
 
-  addToFile /tmp/initInstance.sh "volStatus=\$(gluster volume info $VOLUME_NAME)"
-  addToFile /tmp/initInstance.sh "if [ \$? -ne 0 ]; then"
-  addToFile /tmp/initInstance.sh "echo \$volStatus"
-  addToFile /tmp/initInstance.sh "gluster volume create $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF transport tcp $myIP:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME force"
-  addToFile /tmp/initInstance.sh "gluster volume start $VOLUME_NAME"
-  addToFile /tmp/initInstance.sh "else"
-  addToFile /tmp/initInstance.sh "gluster volume add-brick $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF $myIP:$GLUSTER_DIR/$HOSTNAME/$BRICK_NAME/$VOLUME_NAME"
-  # addToFile /tmp/initInstance.sh "gluster volume rebalance $VOLUME_NAME start"
-  addToFile /tmp/initInstance.sh "fi"
+    echo Creating local initInstance script...
+    addToFile /tmp/initInstance.sh "#!/bin/bash"
+
+    echo Checking peers...$GLUSTER_PEERS
+    local PEER_CONF=""
+    IFS=',' eval 'PEERS=($GLUSTER_PEERS)'
+
+    for PEER in ${PEERS[@]}
+      do
+        echo Probing peer....$PEER
+        local peerIP=$(resolveIPAddress $PEER)
+        addToFile /tmp/initInstance.sh "gluster peer probe $peerIP"
+        PEER_CONF+="$(maskPath $peerIP:/mnt/$BRICK_NAME/$VOLUME_NAME) "
+    done
+
+    local STRIPE_CONF=""
+    if [ -n "$STRIPE_CNT" ]; then
+      STRIPE_CONF="stripe $STRIPE_CNT"
+    fi
+
+    local REPLICA_CONF=""
+    if [ -n "$REPLICA_CNT" ]; then
+      REPLICA_CONF="replica $REPLICA_CNT"
+    fi
+
+    echo Checking local peer...
+    local myIP=$(resolveIPAddress $HOSTNAME)
+    PEER_CONF+="$(maskPath $myIP:/mnt/$BRICK_NAME/$VOLUME_NAME) "
+
+    addToFile /tmp/initInstance.sh "gluster volume create $VOLUME_NAME $STRIPE_CONF $REPLICA_CONF transport tcp $PEER_CONF force"
+    addToFile /tmp/initInstance.sh "gluster volume start $VOLUME_NAME"
+
+  fi
 
   return 0
 }
