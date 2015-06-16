@@ -147,7 +147,7 @@ function configureInstance() {
 
 function startInstance() {
 
-  INSTANCE_CMD="glusterd --no-daemon --selinux -l /dev/stdout"
+  INSTANCE_CMD="glusterd --no-daemon -l /dev/stdout"
 
   if [ -f /tmp/initInstance.sh ]; then
 

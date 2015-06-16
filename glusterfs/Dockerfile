@@ -48,7 +48,7 @@ WORKDIR $GLUSTER_DIR
 VOLUME  $GLUSTER_DIR
 
 # expose default GlusterFS ports
-EXPOSE  24007 49152
+EXPOSE 111 24007 38465 38466 38467 49152
 
 # run service
 ENTRYPOINT ["/start_instance.sh"]
