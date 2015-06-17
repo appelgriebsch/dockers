@@ -120,6 +120,11 @@ function configureInstance() {
 
     for PEER in ${PEERS[@]}
       do
+
+        if [[ "$PEER" == "$HOSTNAME" ]]; then
+          continue;
+        fi
+
         echo Probing peer....$PEER
         local peerIP=$(resolveIPAddress $PEER)
         addToFile /tmp/initInstance.sh "gluster peer probe $peerIP"
@@ -171,6 +176,7 @@ function startInstance() {
   else
     $INSTANCE_CMD
   fi
+
   return 0
 }
 
