@@ -1,6 +1,6 @@
 #
 # Redis Dockerfile
-# VERSION 3.0.0
+# VERSION 3.0.3
 #
 
 # Pull CentOS 7 base image
