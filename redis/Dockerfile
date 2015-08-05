@@ -6,7 +6,7 @@
 # Pull CentOS 7 base image
 FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="3.0.0"
+LABEL VERSION="3.0.3"
 
 # bind to localhost only (will expose a socket for connection)
 ENV REDIS_BIND		127.0.0.1
@@ -31,9 +31,9 @@ RUN \
   yum install -y tar make gcc && \
   yum clean all && \
   cd /tmp && \
-  curl -O http://download.redis.io/releases/redis-3.0.0.tar.gz && \
-  tar -xzf redis-3.0.0.tar.gz && \
-  cd redis-3.0.0 && \
+  curl -O http://download.redis.io/releases/redis-3.0.3.tar.gz && \
+  tar -xzf redis-3.0.3.tar.gz && \
+  cd redis-3.0.3 && \
   make PREFIX=/usr && make PREFIX=/usr install && \
   cp redis.conf /etc && \
   cd / && rm -rf /tmp/redis* && \
