@@ -1,12 +1,12 @@
 #
 # MongoDB Dockerfile
-# VERSION 3.0.2
+# VERSION 3.0.7
 #
 
 # Pull CentOS 7 base image
 FROM appelgriebsch/centos7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="3.0.2"
+LABEL VERSION="3.0.7"
 
 # bind to localhost only (will expose a socket for connection)
 ENV MONGO_BIND		127.0.0.1
