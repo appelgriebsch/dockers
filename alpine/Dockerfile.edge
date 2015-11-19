@@ -1,0 +1,13 @@
+#
+# Alpine Linux edge Dockerfile
+#
+
+# Pull Alpine edge base image
+FROM alpine:edge
+MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
+LABEL VERSION="edge"
+
+USER root
+
+RUN apk update && apk upgrade && apk add bash && \
+    rm -rf /var/cache/apk/*

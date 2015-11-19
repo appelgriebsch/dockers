@@ -2,7 +2,7 @@
 # Alpine Linux 3.2 Dockerfile
 #
 
-# Pull Alpine edge base image
+# Pull Alpine 3.2 base image
 FROM alpine:3.2
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL VERSION="3.2"
