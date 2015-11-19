@@ -1,30 +1,22 @@
 #
 # Caddy Dockerfile
-# VERSION 0.5.1
+# VERSION 0.7.6
 #
 
-# Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+# Pull Alpine Linux 3.2 base image
+FROM appelgriebsch/alpine:3.2
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="0.5.1"
-
-# the version no of CADDY
-ENV CADDY_VERSION   0.5.1
+LABEL VERSION="0.7.6"
 
 # the directory to place the site files
 ENV CADDY_SITEDIR   /data/caddy
 
 USER root
 RUN \
-    yum install -y unzip && \
-    yum clean all && \
     cd /tmp && \
-    curl -L -O https://github.com/mholt/caddy/releases/download/v$CADDY_VERSION/caddy_linux_amd64.zip && \
-    unzip caddy_linux_amd64.zip && \
-    ln -sfv caddy_linux_amd64 caddy && \
-    chmod 755 /tmp/caddy* && \
-    rm -rf /tmp/caddy_linux_amd64.zip && \
-    setcap cap_net_bind_service=+ep /tmp/caddy_linux_amd64 && \
+    wget -O caddy_linux_amd64.tar.gz "http://caddyserver.com/download/build?os=linux&arch=amd64&features=jsonp" && \
+    tar -xzf caddy_linux_amd64.tar.gz && \
+    rm -rf /tmp/caddy_linux_amd64.tar.gz && \
     mkdir -p $CADDY_SITEDIR && \
     chown -R nobody:nobody $CADDY_SITEDIR
 
