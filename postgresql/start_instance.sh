@@ -66,7 +66,7 @@ function createInstanceDirectories() {
   echo Setting database path to $PGSQL_DBDIR.
   chown -R postgres:postgres $PGSQL_DBDIR && \
   chmod -R 755 $PGSQL_DBDIR/$HOSTNAME
-  /usr/pgsql-$PG_VERSION/bin/initdb -D $PGSQL_DBDIR/$HOSTNAME -E UTF-8
+  /usr/bin/initdb -D $PGSQL_DBDIR/$HOSTNAME -E UTF-8
 
   return 0
 }
@@ -117,7 +117,7 @@ function configureInstance() {
 
 function startInstance() {
 
-  INSTANCE_CMD="/usr/pgsql-$PG_VERSION/bin/postgres -D $PGSQL_DBDIR/$HOSTNAME"
+  INSTANCE_CMD="/usr/bin/postgres -D $PGSQL_DBDIR/$HOSTNAME"
 
   if [ -f /tmp/initInstance.sql ]; then
     echo Local configuration script found. Starting instance in background...
@@ -127,7 +127,7 @@ function startInstance() {
     # wait for connection to MASTER server and LOCALHOST
     waitForConnection 127.0.0.1 $PGSQL_PORT
     echo Executing local configuration script on server 127.0.0.1:$PGSQL_PORT
-    initStatus=$(/usr/pgsql-$PG_VERSION/bin/psql -h 127.0.0.1 -p $PGSQL_PORT --file=/tmp/initInstance.sql)
+    initStatus=$(/usr/bin/psql -h 127.0.0.1 -p $PGSQL_PORT --file=/tmp/initInstance.sql)
     echo Initialize status: $initStatus
     fg %1
   else
