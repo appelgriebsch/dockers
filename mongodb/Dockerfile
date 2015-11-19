@@ -1,12 +1,12 @@
 #
 # MongoDB Dockerfile
-# VERSION 3.0.2
+# VERSION 3.0.4
 #
 
-# Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+# Pull Alpine Linux edge base image
+FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="3.0.2"
+LABEL VERSION="3.0.4"
 
 # bind to localhost only (will expose a socket for connection)
 ENV MONGO_BIND		127.0.0.1
@@ -27,14 +27,14 @@ ENV MONGO_DBDIR /data/mongodb
 
 # install mongodb and create a default YAML config file
 USER root
-ADD mongodb.repo /etc/yum.repos.d/
 
-## install mongodb from 10gen
 RUN \
-  yum -y install nc mongodb-org && \
-  yum clean all && \
+  echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+  apk update && \
+  apk add mongodb && \
+  rm -rf /var/cache/apk/* && \
   mkdir -p $MONGO_DBDIR && \
-  chown -R mongod:mongod $MONGO_DBDIR && \
+  chown -R mongodb:nobody $MONGO_DBDIR && \
   chmod -R 755 $MONGO_DBDIR && \
   echo "# new YAML based config file for mongodb > 2.6" > /etc/mongod.conf && \
   echo "processManagement.fork: false" >> /etc/mongod.conf && \
@@ -61,5 +61,5 @@ WORKDIR $MONGO_DBDIR
 EXPOSE $MONGO_PORT
 
 # run service
-USER mongod
+USER mongodb
 ENTRYPOINT ["/start_instance.sh"]
