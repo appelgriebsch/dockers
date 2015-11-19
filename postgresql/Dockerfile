@@ -1,11 +1,11 @@
 #
 # PostgreSQL Dockerfile
-# VERSION 9.4.1
+# VERSION 9.4.4
 
-# Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+# Pull Alpine Linux 3.2 base image
+FROM appelgriebsch/alpine:3.2
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="9.4.1"
+LABEL VERSION="9.4.4"
 
 # bind to localhost only (will expose a socket for connection)
 ENV PGSQL_BIND	  127.0.0.1
@@ -27,9 +27,9 @@ ENV PG_VERSION    9.4
 # install postgresql server
 USER root
 RUN \
-  yum -y install http://yum.postgresql.org/$PG_VERSION/redhat/rhel-6-x86_64/pgdg-redhat94-9.4-1.noarch.rpm  && \
-  yum -y install nc postgresql94 postgresql94-contrib postgresql94-docs postgresql94-server postgresql94-plpython && \
-  yum clean all && \
+  apk update && \
+  apk add postgresql postgresql-bdr postgresql-bdr-contrib postgresql-bdr-extension && \
+  rm -rf /var/cache/apk/* && \
   mkdir -p $PGSQL_DBDIR && \
   chown -R postgres:postgres $PGSQL_DBDIR && \
   chmod -R 755 $PGSQL_DBDIR

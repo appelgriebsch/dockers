@@ -1,12 +1,12 @@
 #
 # Redis Dockerfile
-# VERSION 3.0.3
+# VERSION 3.0.2
 #
 
-# Pull CentOS 7 base image
-FROM appelgriebsch/centos7
+# Pull Alpine Linux 3.2 base image
+FROM appelgriebsch/alpine:3.2
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="3.0.3"
+LABEL VERSION="3.0.2"
 
 # bind to localhost only (will expose a socket for connection)
 ENV REDIS_BIND		127.0.0.1
@@ -27,19 +27,11 @@ ENV REDIS_LOGLVL	notice
 
 # install and configure redis
 USER root
+
 RUN \
-  yum install -y tar make gcc && \
-  yum clean all && \
-  cd /tmp && \
-  curl -O http://download.redis.io/releases/redis-3.0.3.tar.gz && \
-  tar -xzf redis-3.0.3.tar.gz && \
-  cd redis-3.0.3 && \
-  make PREFIX=/usr && make PREFIX=/usr install && \
-  cp redis.conf /etc && \
-  cd / && rm -rf /tmp/redis* && \
-  yum remove -y tar make gcc glibc-headers glibc-devel cpp kernel-plus-headers libmpc mpfr && \
-  yum clean all && \
-  adduser -b $REDIS_DBDIR -r redis && \
+  apk update && \
+  apk add redis && \
+  rm -rf /var/cache/apk/* && \
   mkdir -p $REDIS_DBDIR && \
   chown -R redis:redis $REDIS_DBDIR && \
   chmod -R 755 $REDIS_DBDIR && \
