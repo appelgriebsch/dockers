@@ -1,29 +1,34 @@
 #
 # Caddy Dockerfile
-# VERSION 0.7.6
+# VERSION 0.8-beta4
 #
 
-# Pull Alpine Linux 3.2 base image
-FROM appelgriebsch/alpine:3.2
+# Pull Alpine Linux edge base image
+FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL VERSION="0.7.6"
+LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
+LABEL NAME="caddy-server"
+LABEL VERSION="0.8-beta4"
 
 # the directory to place the site files
 ENV CADDY_SITEDIR   /data/caddy
 
 USER root
 RUN \
+    apk update && \
+    apk add curl && \
+    rm -rf /var/cache/apk/* && \
     cd /tmp && \
-    wget -O caddy_linux_amd64.tar.gz "http://caddyserver.com/download/build?os=linux&arch=amd64&features=jsonp" && \
+    curl -L -o caddy_linux_amd64.tar.gz "https://github.com/mholt/caddy/releases/download/v0.8-beta.4/caddy_linux_amd64.tar.gz" && \
     tar -xzf caddy_linux_amd64.tar.gz && \
     rm -rf /tmp/caddy_linux_amd64.tar.gz && \
     mkdir -p $CADDY_SITEDIR && \
     chown -R nobody:nobody $CADDY_SITEDIR
 
 # add startup-script
-ADD ./start_instance.sh /
+ADD ./start_instance.sh /tmp
 RUN \
-  chmod 755 /start_instance.sh
+  chmod 755 /tmp/start_instance.sh
 
 ONBUILD ADD Caddyfile  $CADDY_SITEDIR/
 ONBUILD ADD ./dist     $CADDY_SITEDIR/
@@ -33,4 +38,4 @@ WORKDIR $CADDY_SITEDIR
 
 # run service
 USER nobody
-ENTRYPOINT ["/start_instance.sh"]
+ENTRYPOINT ["/tmp/start_instance.sh"]
