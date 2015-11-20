@@ -1,4 +1,5 @@
 #!/bin/bash
+export REDIS_DBDIR=/data/redis
 
 function replaceInFile() {
 
