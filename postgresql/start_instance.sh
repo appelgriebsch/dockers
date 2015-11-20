@@ -1,4 +1,5 @@
 #!/bin/bash
+export PGSQL_DBDIR=/data/pgsql
 
 function replaceInFile() {
 
