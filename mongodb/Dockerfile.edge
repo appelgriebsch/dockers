@@ -6,6 +6,8 @@
 # Pull Alpine Linux edge base image
 FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
+LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
+LABEL NAME="mongodb"
 LABEL VERSION="3.0.4"
 
 # bind to localhost only (will expose a socket for connection)
@@ -16,8 +18,6 @@ ENV MONGO_PORT 		27017
 ENV MONGO_LOGLVL	0
 # mode of node (e.g. normal, arbiter, config, shard)
 ENV MONGO_TYPE		normal
-# default mongodb directory
-ENV MONGO_DBDIR /data/mongodb
 # name of replica set (if available)
 # ENV MONGO_REPLSET
 # address of master server (ip:port)
@@ -33,9 +33,9 @@ RUN \
   apk update && \
   apk add mongodb && \
   rm -rf /var/cache/apk/* && \
-  mkdir -p $MONGO_DBDIR && \
-  chown -R mongodb:nobody $MONGO_DBDIR && \
-  chmod -R 755 $MONGO_DBDIR && \
+  mkdir -p /data/mongodb && \
+  chown -R mongodb:nobody /data/mongodb && \
+  chmod -R 755 /data/mongodb && \
   echo "# new YAML based config file for mongodb > 2.6" > /etc/mongod.conf && \
   echo "processManagement.fork: false" >> /etc/mongod.conf && \
   echo "systemLog.verbosity: 0" >> /etc/mongod.conf && \
@@ -47,19 +47,19 @@ RUN \
   echo "storage.journal.enabled: true" >> /etc/mongod.conf
 
 # add startup-script
-ADD ./start_instance.sh /
+ADD ./start_instance.sh /tmp
 RUN \
-  chmod 755 /start_instance.sh
+  chmod 755 /tmp/start_instance.sh
 
 # Define mountable directories.
-VOLUME $MONGO_DBDIR
+VOLUME /data/mongodb
 
 # Define working directory.
-WORKDIR $MONGO_DBDIR
+WORKDIR /data/mongodb
 
 # Expose ports (mongodb - 27017, config-srv - 27018, shard-srv - 27019)
 EXPOSE $MONGO_PORT
 
 # run service
 USER mongodb
-ENTRYPOINT ["/start_instance.sh"]
+ENTRYPOINT ["/tmp/start_instance.sh"]
