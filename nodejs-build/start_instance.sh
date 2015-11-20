@@ -1,27 +1,7 @@
 #!/bin/bash
 
-if [ -f /data/src/bower.json ]; then
-  echo Installing Bower...
-  npm i -g bower
-fi
-
-if ls /data/src/Gruntfile* 1> /dev/null 2>&1; then
-  echo Installing Grunt...
-  npm i -g grunt-cli
-fi
-
-if ls dist/Gulpfile* 1> /dev/null 2>&1; then
-  echo Installing Gulp...
-  npm i -g gulp
-fi
-
-if [ -f /data/src/webpack.config.js ]; then
-  echo Install webpack...
-  npm i -g webpack
-fi
-
 echo Cleanup build directory...
-rm -rf /data/build/*
+rm -rf /data/build/.* /data/build/* 1> /dev/null 2>&1
 
 echo Copy source files to build directory...
 cp -R /data/src/. /data/build
@@ -37,18 +17,35 @@ if [ -f /data/build/dependencies.lst ]; then
   rm -rf /var/cache/apk/*
 fi
 
+if [ -f /data/build/bower.json ]; then
+  echo Installing Bower...
+  npm i -g bower
+
+  bower install --allow-root
+fi
+
+if [ -f /data/src/webpack.config.js ]; then
+  echo Install webpack...
+  npm i -g webpack
+fi
+
 if [ -f /data/build/package.json ]; then
   echo Running npm install in build directory...
-  npm install && npm prune
-  npm cache clean
+  npm install --unsafe-perm && npm prune && npm cache clean
 fi
 
-if [ -f /data/build/Gruntfile ]; then
+if ls /data/src/Gruntfile* 1> /dev/null 2>&1; then
+  echo Installing Grunt...
+  npm i -g grunt-cli
+
   echo Starting Grunt build process in build directory...
-  grunt-cli $@
+  grunt $@
 fi
 
-if [ -f /data/build/Gulpfile ]; then
+if ls dist/Gulpfile* 1> /dev/null 2>&1; then
+  echo Installing Gulp...
+  npm i -g gulp
+
   echo Starting Gulp build process in build directory...
   gulp $@
 fi

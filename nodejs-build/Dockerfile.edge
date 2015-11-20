@@ -15,7 +15,7 @@ USER root
 RUN \
   apk update && \
   apk add nodejs nodejs-dev python python-dev alpine-sdk && \
-  rm -rf /var/cache/apk/* 
+  rm -rf /var/cache/apk/*
 
 # add startup-script
 ADD ./start_instance.sh /tmp
