@@ -23,7 +23,7 @@ RUN \
     chown -R nobody:nobody $CADDY_SITEDIR
 
 # add startup-script
-ADD ./start_instance.sh /tmp
+ADD start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 
