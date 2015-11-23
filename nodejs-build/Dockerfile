@@ -18,7 +18,7 @@ RUN \
   rm -rf /var/cache/apk/*
 
 # add startup-script
-ADD ./start_instance.sh /tmp
+ADD start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 
