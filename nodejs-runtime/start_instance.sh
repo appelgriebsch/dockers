@@ -16,7 +16,7 @@ function configureInstance() {
 
 function startInstance() {
 
-  npm start
+  npm start -- $@
   return 0
 }
 

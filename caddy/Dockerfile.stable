@@ -3,8 +3,8 @@
 # VERSION 0.7.6
 #
 
-# Pull Alpine Linux 3.2 base image
-FROM appelgriebsch/alpine:3.2
+# Pull Alpine Linux stable base image
+FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="caddy-server"
