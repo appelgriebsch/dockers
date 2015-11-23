@@ -20,6 +20,10 @@ RUN   mkdir -p /data/pouchdb && \
       chown -R nobody:nobody /data/pouchdb && \
       chown -R nobody:nobody $NODEJS_APPDIR
 
+ADD start_instance.sh /tmp/
+
+RUN chmod 755 /tmp/start_instance.sh
+
 # Define mountable directories.
 VOLUME /data/pouchdb
 
@@ -28,4 +32,3 @@ EXPOSE $POUCHDB_PORT
 
 # run service
 USER nobody
-CMD ['--dir', '/data/pouchdb', '--port', $POUCHDB_PORT, '--host', $POUCHDB_BIND]
