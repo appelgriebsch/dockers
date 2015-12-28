@@ -1,6 +1,6 @@
 #
 # Caddy Dockerfile
-# VERSION 0.7.6
+# VERSION 0.8.0
 #
 
 # Pull Alpine Linux stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="caddy-server"
-LABEL VERSION="0.7.6"
+LABEL VERSION="0.8.0"
 
 # the directory to place the site files
 ENV CADDY_SITEDIR   /data/caddy
