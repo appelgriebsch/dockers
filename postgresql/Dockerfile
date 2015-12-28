@@ -1,13 +1,13 @@
 #
 # PostgreSQL Dockerfile
-# VERSION 9.4.4
+# VERSION 9.4.5
 
 # Pull Alpine Linux stable base image
 FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="postgresql"
-LABEL VERSION="9.4.4"
+LABEL VERSION="9.4.5"
 
 # bind to localhost only (will expose a socket for connection)
 ENV PGSQL_BIND	  127.0.0.1
