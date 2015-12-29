@@ -16,7 +16,7 @@ ENV CADDY_SITEDIR   /data/caddy
 USER root
 RUN \
     cd /tmp && \
-    wget -O caddy_linux_amd64.tar.gz "https://caddyserver.com/download/build?os=linux&arch=amd64&features=cors%2Cipfilter%2Cjsonp" && \
+    curl -L -o caddy_linux_amd64.tar.gz "https://caddyserver.com/download/build?os=linux&arch=amd64&features=cors%2Cipfilter%2Cjsonp" && \
     tar -xzf caddy_linux_amd64.tar.gz && \
     rm -rf /tmp/caddy_linux_amd64.tar.gz && \
     mkdir -p $CADDY_SITEDIR && \
