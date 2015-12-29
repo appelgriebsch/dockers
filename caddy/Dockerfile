@@ -1,6 +1,6 @@
 #
 # Caddy Dockerfile
-# VERSION 0.7.6
+# VERSION 0.8.0
 #
 
 # Pull Alpine Linux stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="caddy-server"
-LABEL VERSION="0.7.6"
+LABEL VERSION="0.8.0"
 
 # the directory to place the site files
 ENV CADDY_SITEDIR   /data/caddy
@@ -16,7 +16,7 @@ ENV CADDY_SITEDIR   /data/caddy
 USER root
 RUN \
     cd /tmp && \
-    wget -O caddy_linux_amd64.tar.gz "http://caddyserver.com/download/build?os=linux&arch=amd64&features=jsonp" && \
+    wget -O caddy_linux_amd64.tar.gz "https://caddyserver.com/download/build?os=linux&arch=amd64&features=cors%2Cipfilter%2Cjsonp" && \
     tar -xzf caddy_linux_amd64.tar.gz && \
     rm -rf /tmp/caddy_linux_amd64.tar.gz && \
     mkdir -p $CADDY_SITEDIR && \
