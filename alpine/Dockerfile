@@ -11,7 +11,7 @@ LABEL VERSION="3.3"
 
 USER root
 
-RUN apk update && apk upgrade && apk add bash && \
+RUN apk update && apk upgrade && apk add bash curl && \
     rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/bin/bash"]
