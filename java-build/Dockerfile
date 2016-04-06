@@ -1,14 +1,14 @@
 
-# Nodejs-Build Dockerfile
-# VERSION 4.3.0
+# Java-Build Dockerfile
+# VERSION 8.77.03
 #
 
 # Pull Alpine Linux stable base image
 FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="nodejs-build"
-LABEL VERSION="4.3.0"
+LABEL NAME="java-build"
+LABEL VERSION="8.77.03"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
@@ -22,8 +22,15 @@ ENV PROJ_VER      '0.1.0'
 USER root
 RUN \
   apk update && \
-  apk add nodejs nodejs-dev python python-dev alpine-sdk util-linux && \
-  rm -rf /var/cache/apk/*
+  apk add openjdk8 python python-dev alpine-sdk util-linux && \
+  rm -rf /var/cache/apk/* && \
+  cd /tmp && \
+  curl -L -o maven.tar.gz "http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz" && \
+  tar -xzf maven.tar.gz && \
+  mv apache-maven* /usr/local/apache-maven
+
+# adapt path to include maven binary folder
+ENV PATH        $PATH:/usr/local/apache-maven/bin
 
 # add startup-script
 ADD start_instance.sh /tmp/

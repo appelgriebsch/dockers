@@ -1,6 +1,6 @@
 #
 # PouchDB Server Dockerfile
-# VERSION 1.0.0
+# VERSION 1.1.0
 #
 
 # Pull Nodejs-Runtime stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/nodejs-runtime:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="pouchdb-server"
-LABEL VERSION="1.0.0"
+LABEL VERSION="1.1.0"
 
 # define the network segment it is bind to
 ENV POUCHDB_BIND  127.0.0.1

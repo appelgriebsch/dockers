@@ -1,23 +1,23 @@
 
-# Nodejs-Runtime Dockerfile
-# VERSION 4.3.0
+# Java-Runtime Dockerfile
+# VERSION 8.77.03
 #
 
 # Pull Alpine Linux stable base image
 FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="nodejs-runtime"
-LABEL VERSION="4.3.0"
+LABEL NAME="java-runtime"
+LABEL VERSION="8.77.03"
 
 USER root
 
 # the directory to place the site files
-ENV NODEJS_APPDIR   /data/nodejs
+ENV JAVA_APPDIR   /data/java
 
 RUN \
   apk update && \
-  apk add nodejs && \
+  apk add openjdk8-jre && \
   rm -rf /var/cache/apk/*
 
 # add startup-script
@@ -25,10 +25,10 @@ ADD start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 
-ONBUILD ADD ./dist     $NODEJS_APPDIR/
+ONBUILD ADD ./dist     $JAVA_APPDIR/
 
 # Define working directory.
-WORKDIR $NODEJS_APPDIR
+WORKDIR $JAVA_APPDIR
 
 # run build
 USER nobody

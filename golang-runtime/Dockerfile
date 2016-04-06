@@ -1,34 +1,29 @@
 
-# Nodejs-Runtime Dockerfile
-# VERSION 4.3.0
+# Golang-Runtime Dockerfile
+# VERSION 1.5.3
 #
 
 # Pull Alpine Linux stable base image
 FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="nodejs-runtime"
-LABEL VERSION="4.3.0"
+LABEL NAME="golang-runtime"
+LABEL VERSION="1.5.3"
 
 USER root
 
 # the directory to place the site files
-ENV NODEJS_APPDIR   /data/nodejs
-
-RUN \
-  apk update && \
-  apk add nodejs && \
-  rm -rf /var/cache/apk/*
+ENV GOLANG_APPDIR   /data/golang
 
 # add startup-script
 ADD start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 
-ONBUILD ADD ./dist     $NODEJS_APPDIR/
+ONBUILD ADD ./dist     $GOLANG_APPDIR/
 
 # Define working directory.
-WORKDIR $NODEJS_APPDIR
+WORKDIR $GOLANG_APPDIR
 
 # run build
 USER nobody
