@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux edge base image
-FROM appelgriebsch/alpine:stable
+FROM alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="mongodb"
@@ -28,9 +28,8 @@ ENV MONGO_TYPE		normal
 # install mongodb and create a default YAML config file
 USER root
 
-RUN \
+RUN apk update && apk upgrade && apk add bash curl && \
   echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-  apk update && \
   apk add mongodb && \
   rm -rf /var/cache/apk/* && \
   mkdir -p /data/mongodb && \
