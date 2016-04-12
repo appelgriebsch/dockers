@@ -1,6 +1,6 @@
 #
 # PouchDB Server Dockerfile
-# VERSION 1.1.0
+# VERSION 1.1.1
 #
 
 # Pull Nodejs-Runtime stable base image
@@ -8,12 +8,14 @@ FROM appelgriebsch/nodejs-runtime:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="pouchdb-server"
-LABEL VERSION="1.1.0"
+LABEL VERSION="1.1.1"
 
 # define the network segment it is bind to
-ENV POUCHDB_BIND  127.0.0.1
+ENV POUCHDB_BIND    127.0.0.1
 # define port the service is exposed to
-ENV POUCHDB_PORT  5984
+ENV POUCHDB_PORT    5984
+# define the pouchdb database driver (leveldown or sqlite)
+ENV POUCHDB_DRIVER  leveldown
 
 USER root
 RUN   mkdir -p /data/pouchdb && \
@@ -32,3 +34,4 @@ EXPOSE $POUCHDB_PORT
 
 # run service
 USER nobody
+ENTRYPOINT ["/tmp/start_instance.sh"]
