@@ -28,9 +28,9 @@ ENV MONGO_TYPE		normal
 # install mongodb and create a default YAML config file
 USER root
 
-RUN apk update && apk upgrade && apk add bash curl && \
+RUN \
   echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-  apk add mongodb && \
+  apk update && apk upgrade && apk add bash curl mongodb && \
   rm -rf /var/cache/apk/* && \
   mkdir -p /data/mongodb && \
   chown -R mongodb:nobody /data/mongodb && \
