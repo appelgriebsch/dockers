@@ -30,8 +30,9 @@ if [ -f /tmp/$BUILD_ID/dependencies.lst ]; then
 fi
 
 cd /tmp/$BUILD_ID
+export GOPATH=$(pwd)
 go get -d
-go build
+go build -o $PROJ_NAME
 
 if [ -n "$PROJ_NAME" ]; then
   echo Generating Release $PROJ_NAME-$PROJ_VER-Release.tar.gz
