@@ -32,7 +32,7 @@ ENV VOLUME_NAME   VOL01
 
 USER root
 RUN \
-    yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm && \
+    yum -y install epel-release && \
     sed -i 's/^\(enabled=0.*\)$/# \1/' /etc/yum.repos.d/CentOS-Base.repo && \
     cd /etc/yum.repos.d/ && \
     curl -L -O "http://download.gluster.org/pub/gluster/glusterfs/LATEST/EPEL.repo/glusterfs-epel.repo" && \
