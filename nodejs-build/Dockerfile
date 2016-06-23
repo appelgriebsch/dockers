@@ -1,6 +1,6 @@
 
 # Nodejs-Build Dockerfile
-# VERSION 4.3.0
+# VERSION 6.2.0
 #
 
 # Pull Alpine Linux stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="nodejs-build"
-LABEL VERSION="4.3.0"
+LABEL VERSION="6.2.0"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
