@@ -1,6 +1,6 @@
 
 # Java-Runtime Dockerfile
-# VERSION 8.77.03
+# VERSION 8.92.14
 #
 
 # Pull Alpine Linux stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="java-runtime"
-LABEL VERSION="8.77.03"
+LABEL VERSION="8.92.143"
 
 USER root
 
