@@ -1,6 +1,6 @@
 
 # Java-Build Dockerfile
-# VERSION 8.77.03
+# VERSION 8.92.14
 #
 
 # Pull Alpine Linux stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="java-build"
-LABEL VERSION="8.77.03"
+LABEL VERSION="8.92.14"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
