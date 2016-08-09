@@ -1,6 +1,6 @@
 
 # Golang-Build Dockerfile
-# VERSION 1.6.2
+# VERSION 1.6
 #
 
 # Pull Alpine Linux stable base image
@@ -8,7 +8,7 @@ FROM appelgriebsch/alpine:stable
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="golang-build"
-LABEL VERSION="1.6.2"
+LABEL VERSION="1.6"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
