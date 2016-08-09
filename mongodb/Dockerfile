@@ -1,14 +1,14 @@
 #
 # MongoDB Dockerfile
-# VERSION 3.2.4
+# VERSION 3.2
 #
 
-# Pull Alpine Linux edge base image
-FROM alpine:edge
+# Pull Alpine Linux latest base image
+FROM alpine:latest
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="mongodb"
-LABEL VERSION="3.2.4"
+LABEL VERSION="3.2"
 
 # bind to localhost only (will expose a socket for connection)
 ENV MONGO_BIND		127.0.0.1
