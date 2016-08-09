@@ -22,14 +22,13 @@ RUN \
 
 # add startup-script
 ADD start_instance.sh /tmp/
+ADD install_dependencies.sh /tmp/
 RUN \
-  chmod 755 /tmp/start_instance.sh
+  chmod 755 /tmp/start_instance.sh && \
+  chmod 755 /tmp/install_dependencies.sh
 
-ONBUILD ADD ./dist     $JAVA_APPDIR/
+ONBUILD ADD ./dist     $NODEJS_APPDIR/
+ONBUILD RUN /tmp/install_dependencies.sh
 
 # Define working directory.
 WORKDIR $JAVA_APPDIR
-
-# run build
-USER nobody
-ENTRYPOINT ["/tmp/start_instance.sh"]
