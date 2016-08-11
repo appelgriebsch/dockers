@@ -15,6 +15,9 @@ LABEL VERSION="6.2"
 # ENV GIT_USER    'appelgriebsch'
 # ENV GIT_TOKEN   '<github access token>'
 
+# build arguments
+ENV BUILD_ARGS    ''
+
 # project release tar.gz bundling environment variables
 ENV PROJ_NAME     'sample'
 ENV PROJ_VER      '0.1.0'
@@ -31,10 +34,10 @@ RUN \
   chmod 755 /tmp/start_instance.sh
 
 # Define mountable directories.
-VOLUME /data/build
+VOLUME /data/src
 
 # Define working directory.
-WORKDIR /data/build
+WORKDIR /data/src
 
 # run build
 ENTRYPOINT ["/tmp/start_instance.sh"]
