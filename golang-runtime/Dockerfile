@@ -22,7 +22,7 @@ RUN \
   chmod 755 /tmp/start_instance.sh && \
   chmod 755 /tmp/install_dependencies.sh
 
-ONBUILD ADD ./dist     $NODEJS_APPDIR/
+ONBUILD ADD ./dist     $GOLANG_APPDIR/
 ONBUILD RUN /tmp/install_dependencies.sh
 
 # Define working directory.
