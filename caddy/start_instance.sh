@@ -72,7 +72,8 @@ function configureInstance() {
 
 function startInstance() {
 
-  /tmp/caddy -conf=$CADDY_SITEDIR/Caddyfile
+  /tmp/caddy -conf=$CADDY_SITEDIR/Caddyfile -host=$HOST -port=$PORT \
+             -agree -log=stdout -root $CADDY_SITEDIR/site
   return 0
 }
 
