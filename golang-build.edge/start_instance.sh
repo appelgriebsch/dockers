@@ -15,7 +15,7 @@ if [ -n "$GIT_REPO" ]; then
   fi
 else
   echo Copy source files to build directory...
-  cp -R /data/build/. /tmp/$BUILD_ID
+  cp -R /data/src/. /tmp/$BUILD_ID
 fi
 
 echo Cleanup obsolete files from temporary build directory...
@@ -30,15 +30,13 @@ if [ -f /tmp/$BUILD_ID/devDependencies.lst ]; then
 fi
 
 cd /tmp/$BUILD_ID
-
-if [ -f pom.xml ]; then
-  echo Running mvn package in temporary build directory...
-  mvn package
-fi
+export GOPATH=$(pwd)
+go get -d
+go build -o $PROJ_NAME $BUILD_ARGS
 
 if [ -n "$PROJ_NAME" ]; then
   echo Generating Release $PROJ_NAME-$PROJ_VER-Release.tar.gz
-  tar -czf /data/build/$PROJ_NAME-$PROJ_VER-Release.tar.gz .
+  tar -czf /data/src/$PROJ_NAME-$PROJ_VER-Release.tar.gz .
 fi
 
 echo Finished.

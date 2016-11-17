@@ -16,13 +16,7 @@ function configureInstance() {
 
 function startInstance() {
 
-  DB_DRIVER=""
-
-  if [ "$POUCHDB_DRIVER" == "sqlite" ]; then
-    DB_DRIVER="--sqlite"
-  fi
-
-  $NODEJS_APPDIR/bin/pouchdb-server --dir=/data/pouchdb --port=$POUCHDB_PORT --host=$POUCHDB_BIND $DB_DRIVER
+  $@
   return 0
 }
 

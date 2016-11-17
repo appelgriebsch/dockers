@@ -1,14 +1,14 @@
 
 # Golang-Runtime Dockerfile
-# VERSION 1.6
+# VERSION 1.7
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.4
+FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="golang-runtime"
-LABEL VERSION="1.6"
+LABEL VERSION="1.7"
 
 USER root
 

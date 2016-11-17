@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux latest base image
-FROM alpine:latest
+FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="mongodb"
@@ -30,7 +30,7 @@ USER root
 
 RUN \
   echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-  apk update && apk upgrade && apk add bash curl mongodb && \
+  apk update && apk upgrade && apk add mongodb && \
   rm -rf /var/cache/apk/* && \
   mkdir -p /data/mongodb && \
   chown -R mongodb:nobody /data/mongodb && \

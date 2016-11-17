@@ -1,14 +1,14 @@
 
 # Nodejs-Runtime Dockerfile
-# VERSION 6.2
+# VERSION 6.7
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:stable
+FROM appelgriebsch/alpine:3.4
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="nodejs-runtime"
-LABEL VERSION="6.2"
+LABEL VERSION="6.7"
 
 USER root
 

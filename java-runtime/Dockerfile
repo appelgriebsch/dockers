@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:stable
+FROM appelgriebsch/alpine:3.4
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="java-runtime"
@@ -27,7 +27,7 @@ RUN \
   chmod 755 /tmp/start_instance.sh && \
   chmod 755 /tmp/install_dependencies.sh
 
-ONBUILD ADD ./dist     $NODEJS_APPDIR/
+ONBUILD ADD ./dist     $JAVA_APPDIR/
 ONBUILD RUN /tmp/install_dependencies.sh
 
 # Define working directory.
