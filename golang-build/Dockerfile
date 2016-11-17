@@ -21,6 +21,7 @@ ENV BUILD_ARGS    ''
 # project release tar.gz bundling environment variables
 ENV PROJ_NAME     'sample'
 ENV PROJ_VER      '0.1.0'
+ENV PROJ_NS       'com.appelgriebsch.sample'
 
 USER root
 RUN \
