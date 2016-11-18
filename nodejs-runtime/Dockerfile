@@ -29,6 +29,7 @@ RUN \
 
 ONBUILD ADD ./dist     $NODEJS_APPDIR/
 ONBUILD RUN /tmp/install_dependencies.sh
+ONBUILD ENV PATH       $NODEJS_APPDIR/bin:$PATH
 
 # Define working directory.
 WORKDIR $NODEJS_APPDIR

@@ -29,6 +29,7 @@ RUN \
 
 ONBUILD ADD ./dist     $JAVA_APPDIR/
 ONBUILD RUN /tmp/install_dependencies.sh
+ONBUILD ENV PATH       $JAVA_APPDIR:$PATH
 
 # Define working directory.
 WORKDIR $JAVA_APPDIR

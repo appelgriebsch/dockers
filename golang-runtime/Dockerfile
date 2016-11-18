@@ -24,6 +24,7 @@ RUN \
 
 ONBUILD ADD ./dist     $GOLANG_APPDIR/
 ONBUILD RUN /tmp/install_dependencies.sh
+ONBUILD ENV PATH       $GOLANG_APPDIR:$PATH
 
 # Define working directory.
 WORKDIR $GOLANG_APPDIR
