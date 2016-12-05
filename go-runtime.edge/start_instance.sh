@@ -16,7 +16,7 @@ function configureInstance() {
 
 function startInstance() {
 
-  $@
+  sh -c "$@"
   return 0
 }
 

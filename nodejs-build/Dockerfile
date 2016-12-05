@@ -12,6 +12,7 @@ LABEL VERSION="6.7"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
+# ENV GIT_BRANCH  'master'
 # ENV GIT_USER    'appelgriebsch'
 # ENV GIT_TOKEN   '<github access token>'
 

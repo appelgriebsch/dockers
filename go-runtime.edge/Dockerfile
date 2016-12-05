@@ -1,19 +1,19 @@
 
 # Golang-Runtime Dockerfile
-# VERSION 1.6
+# VERSION 1.7
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.4
+FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="golang-runtime"
-LABEL VERSION="1.6"
+LABEL NAME="go-runtime"
+LABEL VERSION="1.7"
 
 USER root
 
 # the directory to place the site files
-ENV GOLANG_APPDIR   /data/golang
+ENV GO_APPDIR   /data/go
 
 # add startup-script
 ADD start_instance.sh /tmp/
@@ -22,9 +22,9 @@ RUN \
   chmod 755 /tmp/start_instance.sh && \
   chmod 755 /tmp/install_dependencies.sh
 
-ONBUILD ADD ./dist     $GOLANG_APPDIR/
+ONBUILD ADD ./dist     $GO_APPDIR/
 ONBUILD RUN /tmp/install_dependencies.sh
-ONBUILD ENV PATH       $GOLANG_APPDIR:$PATH
+ONBUILD ENV PATH       $GO_APPDIR:$PATH
 
 # Define working directory.
-WORKDIR $GOLANG_APPDIR
+WORKDIR $GO_APPDIR

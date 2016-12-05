@@ -1,17 +1,18 @@
 
-# Golang-Build Dockerfile
-# VERSION 1.7
+# Nodejs-Build Dockerfile
+# VERSION 6.7
 #
 
-# Pull Alpine Linux stable base image
+# Pull Alpine Linux edge base image
 FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="golang-build"
-LABEL VERSION="1.7"
+LABEL NAME="nodejs-build"
+LABEL VERSION="6.9"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
+# ENV GIT_BRANCH  'master'
 # ENV GIT_USER    'appelgriebsch'
 # ENV GIT_TOKEN   '<github access token>'
 
@@ -21,12 +22,11 @@ ENV BUILD_ARGS    ''
 # project release tar.gz bundling environment variables
 ENV PROJ_NAME     'sample'
 ENV PROJ_VER      '0.1.0'
-ENV PROJ_NS       'com.appelgriebsch.sample'
 
 USER root
 RUN \
   apk update && \
-  apk add go go-tools python python-dev alpine-sdk util-linux && \
+  apk add nodejs nodejs-dev python python-dev alpine-sdk util-linux && \
   rm -rf /var/cache/apk/*
 
 # add startup-script

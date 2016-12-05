@@ -7,11 +7,12 @@
 FROM appelgriebsch/alpine:3.4
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="golang-build"
+LABEL NAME="go-build"
 LABEL VERSION="1.6"
 
 # build source environment variables
-# ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
+# ENV GIT_REPO    'github.com/appelgriebsch/go-sample.git'
+# ENV GIT_BRANCH  'master'
 # ENV GIT_USER    'appelgriebsch'
 # ENV GIT_TOKEN   '<github access token>'
 
@@ -21,7 +22,7 @@ ENV BUILD_ARGS    ''
 # project release tar.gz bundling environment variables
 ENV PROJ_NAME     'sample'
 ENV PROJ_VER      '0.1.0'
-ENV PROJ_NS       'com.appelgriebsch.sample'
+ENV PROJ_NS       'github.com/appelgriebsch/go-sample'
 
 USER root
 RUN \

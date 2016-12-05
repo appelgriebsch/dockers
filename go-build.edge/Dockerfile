@@ -1,37 +1,34 @@
 
-# Java-Build Dockerfile
-# VERSION 1.8
+# Golang-Build Dockerfile
+# VERSION 1.7
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.4
+FROM appelgriebsch/alpine:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="java-build"
-LABEL VERSION="1.8"
+LABEL NAME="go-build"
+LABEL VERSION="1.7"
 
 # build source environment variables
-# ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'
+# ENV GIT_REPO    'github.com/appelgriebsch/go-sample.git'
 # ENV GIT_BRANCH  'master'
 # ENV GIT_USER    'appelgriebsch'
 # ENV GIT_TOKEN   '<github access token>'
 
+# build arguments
+ENV BUILD_ARGS    ''
+
 # project release tar.gz bundling environment variables
 ENV PROJ_NAME     'sample'
 ENV PROJ_VER      '0.1.0'
+ENV PROJ_NS       'github.com/appelgriebsch/go-sample'
 
 USER root
 RUN \
   apk update && \
-  apk add openjdk8 python python-dev alpine-sdk util-linux && \
-  rm -rf /var/cache/apk/* && \
-  cd /tmp && \
-  curl -L -o maven.tar.gz "http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz" && \
-  tar -xzf maven.tar.gz && \
-  mv apache-maven* /usr/local/apache-maven
-
-# adapt path to include maven binary folder
-ENV PATH        $PATH:/usr/local/apache-maven/bin
+  apk add go go-tools glide python python-dev alpine-sdk util-linux && \
+  rm -rf /var/cache/apk/*
 
 # add startup-script
 ADD start_instance.sh /tmp/
@@ -39,10 +36,10 @@ RUN \
   chmod 755 /tmp/start_instance.sh
 
 # Define mountable directories.
-VOLUME /data/build
+VOLUME /data/src
 
 # Define working directory.
-WORKDIR /data/build
+WORKDIR /data/src
 
 # run build
 ENTRYPOINT ["/tmp/start_instance.sh"]

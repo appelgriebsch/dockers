@@ -13,11 +13,15 @@ mkdir -p $SRC_DIR
 
 if [ -n "$GIT_REPO" ]; then
   echo Cloning GIT repo from $GIT_REPO to $SRC_DIR
-
   if [ -n "$GIT_USER" ]; then
     git clone "https://$GIT_USER:$GIT_TOKEN@$GIT_REPO" $SRC_DIR
   else
     git clone "https://$GIT_REPO" $SRC_DIR
+  fi
+  if [ -n "$GIT_BRANCH" ]; then
+    echo Checking out branch $GIT_BRANCH...
+    cd $SRC_DIR
+    git checkout -b $GIT_BRANCH origin/$GIT_BRANCH
   fi
   if [ -f $SRC_DIR/.gitmodules ]; then
     cd $SRC_DIR
@@ -48,6 +52,12 @@ fi
 export GOPATH=/tmp/$BUILD_ID
 
 cd $SRC_DIR
+
+if [ -f $SRC_DIR/glide.yaml ]; then
+  echo Installing dependencies...
+  glide install -v
+fi
+
 go get -d
 go build -o $PROJ_NAME $BUILD_ARGS
 
