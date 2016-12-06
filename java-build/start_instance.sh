@@ -56,7 +56,7 @@ fi
 
 if [ -n "$PROJ_NAME" ]; then
   echo Generating Release $PROJ_NAME-$PROJ_VER-Release.tar.gz
-  tar -czvf /data/src/$PROJ_NAME-$PROJ_VER-Release.tar.gz -C $SRC_DIR/ .
+  tar -czvf /data/src/$PROJ_NAME-$PROJ_VER-Release.tar.gz -C $SRC_DIR/target .
 fi
 
 echo Finished.
