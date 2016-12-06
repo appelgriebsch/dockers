@@ -5,6 +5,10 @@ PKG_NAME=minio
 PKG_VER=0.1.0
 PKG_MAIN=main.go
 
+# Git repo settings
+GIT_REPO=github.com/minio/minio.git
+GIT_BRANCH=release
+
 # runtime specifics
 GO_VER=1.7
 PROXY=
@@ -12,7 +16,7 @@ NO_PROXY=
 
 if [ ! -f $PKG_NAME-$PKG_VER-Release.tar.gz ]; then
   echo Building Go binary...
-  docker run --rm -e PROJ_NS=$PKG_NS -e PROJ_NAME=$PKG_NAME -e PROJ_VERS=$PKG_VER -e BUILD_ARGS=$PKG_MAIN -e http_proxy=$PROXY -e https_proxy=$PROXY -e no_proxy=$NO_PROXY -e GIT_REPO=github.com/minio/minio.git -v $(pwd):/data/src appelgriebsch/golang-build:$GO_VER
+  docker run --rm -e PROJ_NS=$PKG_NS -e PROJ_NAME=$PKG_NAME -e PROJ_VERS=$PKG_VER -e BUILD_ARGS=$PKG_MAIN -e http_proxy=$PROXY -e https_proxy=$PROXY -e no_proxy=$NO_PROXY -e GIT_REPO=$GIT_REPO -e GIT_BRANCH=$GIT_BRANCH -v $(pwd):/data/src appelgriebsch/go-build:$GO_VER
 fi
 
 echo Building Docker container...

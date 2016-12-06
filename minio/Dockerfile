@@ -13,4 +13,5 @@ ENV MINIO_PATH                      '$GO_APPDIR/shared'
 VOLUME $GO_APPDIR/shared
 
 USER nobody
-ENTRYPOINT $GO_APPDIR/minio --config-dir $GO_APPDIR/.minio server --address $MINIO_ADDRESS $MINIO_PATH
+ENTRYPOINT ["/data/go/minio", "--config-dir", "/data/go/.minio"]
+CMD ["--help"]
