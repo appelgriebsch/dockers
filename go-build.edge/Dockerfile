@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:edge
+FROM appelgriebsch/alpine-sdk:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="go-build"
@@ -27,11 +27,11 @@ ENV PROJ_NS       'github.com/appelgriebsch/go-sample'
 USER root
 RUN \
   apk update && \
-  apk add go go-tools glide python python-dev alpine-sdk util-linux && \
+  apk add go go-tools glide && \
   rm -rf /var/cache/apk/*
 
 # add startup-script
-ADD start_instance.sh /tmp/
+COPY start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 

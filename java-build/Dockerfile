@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.4
+FROM appelgriebsch/alpine-sdk:3.4
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="java-build"
@@ -23,7 +23,7 @@ ENV PROJ_VER      '0.1.0'
 USER root
 RUN \
   apk update && \
-  apk add openjdk8 python python-dev alpine-sdk util-linux && \
+  apk add openjdk8 && \
   rm -rf /var/cache/apk/* && \
   cd /tmp && \
   curl -L -o maven.tar.gz "http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz" && \
@@ -34,7 +34,7 @@ RUN \
 ENV PATH        $PATH:/usr/local/apache-maven/bin
 
 # add startup-script
-ADD start_instance.sh /tmp/
+COPY start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 

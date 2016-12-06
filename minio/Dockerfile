@@ -1,4 +1,4 @@
-FROM appelgriebsch/golang-runtime:1.7
+FROM appelgriebsch/go-runtime:1.7
 
 RUN \
     mkdir -p $GO_APPDIR/shared && \

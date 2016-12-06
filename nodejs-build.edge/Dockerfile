@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux edge base image
-FROM appelgriebsch/alpine:edge
+FROM appelgriebsch/alpine-sdk:edge
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="nodejs-build"
@@ -26,11 +26,11 @@ ENV PROJ_VER      '0.1.0'
 USER root
 RUN \
   apk update && \
-  apk add nodejs nodejs-dev python python-dev alpine-sdk util-linux && \
+  apk add nodejs nodejs-dev && \
   rm -rf /var/cache/apk/*
 
 # add startup-script
-ADD start_instance.sh /tmp/
+COPY start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 

@@ -21,15 +21,15 @@ RUN \
   rm -rf /var/cache/apk/*
 
 # add startup-script
-ADD start_instance.sh /tmp/
-ADD install_dependencies.sh /tmp/
+COPY start_instance.sh /tmp/
+COPY install_dependencies.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh && \
   chmod 755 /tmp/install_dependencies.sh
 
-ONBUILD ADD ./dist     $JAVA_APPDIR/
-ONBUILD RUN /tmp/install_dependencies.sh
-ONBUILD ENV PATH       $JAVA_APPDIR:$PATH
+ONBUILD COPY ./dist     $JAVA_APPDIR/
+ONBUILD RUN  /tmp/install_dependencies.sh
+ONBUILD ENV  PATH       $JAVA_APPDIR:$PATH
 
 # Define working directory.
 WORKDIR $JAVA_APPDIR

@@ -46,7 +46,7 @@ RUN \
   echo "storage.journal.enabled: true" >> /etc/mongod.conf
 
 # add startup-script
-ADD start_instance.sh /tmp/
+COPY start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 
