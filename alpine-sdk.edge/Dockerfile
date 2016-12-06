@@ -13,7 +13,7 @@ LABEL VERSION="edge"
 USER root
 RUN \
   apk update && \
-  apk add python python-dev alpine-sdk util-linux && \
+  apk add python python-dev alpine-sdk util-linux autoconf automake && \
   rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/bin/bash"]
