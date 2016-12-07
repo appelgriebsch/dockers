@@ -21,4 +21,5 @@ function go::package() {
   sdk::archiveTarget $SRC_DIR $PROJ_NAME
 }
 
+go::prepare && go::build && go::package
 echo Finished.
