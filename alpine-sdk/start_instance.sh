@@ -7,10 +7,9 @@ done
 SRC_DIR=$(sdk::prepareBuildDir)
 
 function sdk::prepare() {
-  sdk::prepareBuildEnv $SRC_DIR && \
-      sdk::fetchSources $SRC_DIR && \
-      fs::cleanupFolder $SRC_DIR '.git' && \
-      os::installPkgs $SRC_DIR/devDependencies.lst
+  sdk::fetchSources $SRC_DIR && \
+		sdk::prepareBuildEnv $SRC_DIR && \
+    os::installPkgs $SRC_DIR/devDependencies.lst
 }
 
 function sdk::build() {
@@ -18,7 +17,8 @@ function sdk::build() {
 }
 
 function sdk::package() {
-  sdk::archiveTarget $SRC_DIR/dist '.'
+	fs::cleanupFolder $SRC_DIR '.git' && \
+  	sdk::archiveTarget $SRC_DIR/dist '.'
 }
 
 sdk::prepare && sdk::build && sdk::package

@@ -7,10 +7,9 @@ done
 SRC_DIR=$(sdk::prepareBuildDir)
 
 function nodejs::prepare() {
-  sdk::prepareBuildEnv $SRC_DIR && \
-      sdk::fetchSources $SRC_DIR && \
-      fs::cleanupFolder $SRC_DIR '.git,node_modules' && \
-      os::installPkgs $SRC_DIR/devDependencies.lst
+	sdk::fetchSources $SRC_DIR && \
+  	sdk::prepareBuildEnv $SRC_DIR && \
+    os::installPkgs $SRC_DIR/devDependencies.lst
 }
 
 function nodejs::build() {
@@ -18,7 +17,8 @@ function nodejs::build() {
 }
 
 function nodejs::package() {
-  sdk::archiveTarget $SRC_DIR .
+	fs::cleanupFolder $SRC_DIR '.git' && \
+		sdk::archiveTarget $SRC_DIR .
 }
 
 nodejs::prepare && nodejs::build && nodejs::package

@@ -7,10 +7,9 @@ done
 SRC_DIR=$(go::prepareBuildDir)
 
 function go::prepare() {
-  sdk::prepareBuildEnv $SRC_DIR && \
-      sdk::fetchSources $SRC_DIR && \
-      fs::cleanupFolder $SRC_DIR '.git' && \
-      os::installPkgs $SRC_DIR/devDependencies.lst
+  sdk::fetchSources $SRC_DIR && \
+		sdk::prepareBuildEnv $SRC_DIR && \
+    os::installPkgs $SRC_DIR/devDependencies.lst
 }
 
 function go::build() {
@@ -18,7 +17,8 @@ function go::build() {
 }
 
 function go::package() {
-  sdk::archiveTarget $SRC_DIR $PROJ_NAME
+	fs::cleanupFolder $SRC_DIR '.git' && \
+  	sdk::archiveTarget $SRC_DIR $PROJ_NAME
 }
 
 go::prepare && go::build && go::package
