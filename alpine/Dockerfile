@@ -14,4 +14,12 @@ USER root
 RUN apk update && apk upgrade && apk add bash curl && \
     rm -rf /var/cache/apk/*
 
-ENTRYPOINT ["/bin/bash"]
+# add startup-scripts
+COPY scripts/*.sh /tmp/scripts/
+COPY start_instance.sh /tmp/
+RUN \
+  chmod 755 /tmp/start_instance.sh
+
+# run build
+ENTRYPOINT ["/tmp/start_instance.sh"]
+CMD ["/bin/bash"]
