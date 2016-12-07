@@ -5,7 +5,7 @@ function sdk::archiveTarget() {
 
   if [ -n "$PROJ_NAME" ]; then
     echo "Generating Release $PROJ_NAME-$PROJ_VER-Release.tar.gz"
-    tar -czvf /data/src/$PROJ_NAME-$PROJ_VER-Release.tar.gz -C $SRC_DIR/ $TARGET
+    tar -czvf /data/build/$PROJ_NAME-$PROJ_VER-Release.tar.gz -C $SRC_DIR/ $TARGET
   fi
 
   return $?

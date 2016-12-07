@@ -23,23 +23,20 @@ ENV BUILD_ARGS    ''
 ENV PROJ_NAME     'sample'
 ENV PROJ_VER      '0.1.0'
 
-USER root
-RUN \
-  apk update && \
-  apk add python python-dev alpine-sdk util-linux autoconf automake && \
-  rm -rf /var/cache/apk/*
-
 # add startup-scripts
 COPY scripts/*.sh /tmp/scripts/
 COPY start_instance.sh /tmp/
 RUN \
   chmod 755 /tmp/start_instance.sh
 
+ONBUILD COPY dependencies.lst         /tmp/
+ONBUILD RUN  /tmp/install_dependencies.sh
+
 # Define mountable directories.
-VOLUME /data/src
+VOLUME /data/build
 
 # Define working directory.
-WORKDIR /data/src
+WORKDIR /data/build
 
 # run build
 ENTRYPOINT ["/tmp/start_instance.sh"]

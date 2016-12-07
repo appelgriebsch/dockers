@@ -17,8 +17,13 @@ RUN apk update && apk upgrade && apk add bash curl && \
 # add startup-scripts
 COPY scripts/*.sh /tmp/scripts/
 COPY start_instance.sh /tmp/
+COPY install_dependencies.sh  /tmp/
 RUN \
-  chmod 755 /tmp/start_instance.sh
+  chmod 755 /tmp/start_instance.sh && \
+  chmod 755 /tmp/install_dependencies.sh
+
+ONBUILD COPY dependencies.lst         /tmp/
+ONBUILD RUN  /tmp/install_dependencies.sh
 
 # run build
 ENTRYPOINT ["/tmp/start_instance.sh"]

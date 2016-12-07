@@ -32,3 +32,14 @@ function fs::maskPath() {
 
   echo $(replaceInString $path $pathDelimiter $replacementPattern)
 }
+
+function fs::cleanupFolder() {
+
+  local SRC_DIR=$1
+  local FILES=$2
+
+  echo "Cleanup obsolete files $FILES from temporary build directory $SRC_DIR..."
+  rm -rf $SRC_DIR/{$FILES}
+
+  return $?
+}

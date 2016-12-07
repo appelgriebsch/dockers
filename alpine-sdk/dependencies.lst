@@ -1,0 +1,6 @@
+alpine-sdk 
+autoconf
+automake
+python
+python-dev
+util-linux

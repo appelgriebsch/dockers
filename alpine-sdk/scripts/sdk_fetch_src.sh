@@ -1,4 +1,4 @@
-function sdk::retrieveSources() {
+function sdk::fetchSources() {
 
   local SRC_DIR=$1
 
@@ -24,7 +24,7 @@ function sdk::retrieveSources() {
   fi
 
   echo "Copy additional files to build directory... $SRC_DIR"
-  cp -R /data/src/. $SRC_DIR
+  cp -R /data/build/. $SRC_DIR
 
   return $?
 }
