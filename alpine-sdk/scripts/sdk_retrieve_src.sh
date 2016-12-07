@@ -21,10 +21,10 @@ function sdk::retrieveSources() {
       cd $SRC_DIR
       git submodules update --init
     fi
-  else
-    echo "Copy source files to build directory... $SRC_DIR"
-    cp -R /data/src/. $SRC_DIR
   fi
+
+  echo "Copy additional files to build directory... $SRC_DIR"
+  cp -R /data/src/. $SRC_DIR
 
   return $?
 }
