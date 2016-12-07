@@ -7,10 +7,9 @@ done
 SRC_DIR=$(sdk::prepareBuildDir)
 
 function java::prepare() {
-  sdk::prepareBuildEnv $SRC_DIR && \
-      sdk::fetchSources $SRC_DIR && \
-      fs::cleanupFolder $SRC_DIR '.git' && \
-      os::installPkgs $SRC_DIR/devDependencies.lst
+	sdk::fetchSources $SRC_DIR && \
+  	sdk::prepareBuildEnv $SRC_DIR && \
+    os::installPkgs $SRC_DIR/devDependencies.lst
 }
 
 function java::build() {
@@ -18,7 +17,8 @@ function java::build() {
 }
 
 function java::package() {
-  sdk::archiveTarget $SRC_DIR/target .
+	fs::cleanupFolder $SRC_DIR '.git' && \
+		sdk::archiveTarget $SRC_DIR/target .
 }
 
 java::prepare && java::build && java::package
