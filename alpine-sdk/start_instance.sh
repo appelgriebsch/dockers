@@ -22,5 +22,6 @@ function sdk::package() {
 		sdk::prepareDockerfile $SRC_DIR
 }
 
+echo Starting native binary build...$PROJ_NAME $PROJ_VER
 sdk::prepare && sdk::build && sdk::package
 echo Finished.

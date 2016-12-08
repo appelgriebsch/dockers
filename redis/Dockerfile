@@ -29,9 +29,6 @@ ENV REDIS_LOGLVL	notice
 USER root
 
 RUN \
-  apk update && \
-  apk add redis && \
-  rm -rf /var/cache/apk/* && \
   mkdir -p /data/redis && \
   chown -R redis:redis /data/redis && \
   chmod -R 755 /data/redis && \
@@ -39,9 +36,9 @@ RUN \
   sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf
 
 # add startup-script
-COPY start_instance.sh /tmp/
+COPY redis.sh /tmp/
 RUN \
-  chmod 755 /tmp/start_instance.sh
+  chmod 755 /tmp/redis.sh
 
 # Define mountable directories.
 VOLUME /data/redis
@@ -54,4 +51,4 @@ EXPOSE $REDIS_PORT
 
 # run service
 USER redis
-ENTRYPOINT ["/tmp/start_instance.sh"]
+CMD  ["/tmp/redis.sh"]

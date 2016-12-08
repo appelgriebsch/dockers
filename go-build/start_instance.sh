@@ -22,5 +22,6 @@ function go::package() {
 		sdk::prepareDockerfile $SRC_DIR
 }
 
+echo Starting Go binary build...$PROJ_NAME $PROJ_VER
 go::prepare && go::build && go::package
 echo Finished.

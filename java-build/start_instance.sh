@@ -22,5 +22,6 @@ function java::package() {
 		sdk::prepareDockerfile $SRC_DIR
 }
 
+echo Starting Java build...$PROJ_NAME $PROJ_VER
 java::prepare && java::build && java::package
 echo Finished.

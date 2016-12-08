@@ -1,4 +1,10 @@
+# Pull Alpine Linux stable base image
 FROM appelgriebsch/alpine:3.4
+MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
+LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
+LABEL NAME="$PROJ_NAME"
+LABEL VERSION="$PROJ_VER"
+LABEL BUILD="$BUILD_TIME"
 
 # environment variables
 ENV GO_APPDIR=/data/go

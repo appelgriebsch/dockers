@@ -22,5 +22,6 @@ function nodejs::package() {
 		sdk::prepareDockerfile $SRC_DIR
 }
 
+echo Starting Node.js build...$PROJ_NAME $PROJ_VER
 nodejs::prepare && nodejs::build && nodejs::package
 echo Finished.

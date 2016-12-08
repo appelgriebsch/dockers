@@ -25,17 +25,14 @@ ENV PGSQL_LOGLVL	notice
 # install postgresql server
 USER root
 RUN \
-  apk update && \
-  apk add postgresql postgresql-bdr postgresql-bdr-contrib postgresql-bdr-extension && \
-  rm -rf /var/cache/apk/* && \
   mkdir -p /data/pgsql && \
   chown -R postgres:postgres /data/pgsql && \
   chmod -R 755 /data/pgsql
 
 # add startup-script
-COPY start_instance.sh /tmp/
+COPY postgresql.sh /tmp/
 RUN \
-  chmod 755 /tmp/start_instance.sh
+  chmod 755 /tmp/postgresql.sh
 
 # Define mountable directories.
 VOLUME /data/pgsql
@@ -48,4 +45,4 @@ EXPOSE $PGSQL_PORT
 
 # run service
 USER postgres
-ENTRYPOINT ["/tmp/start_instance.sh"]
+CMD  ["/tmp/postgresql.sh"]
