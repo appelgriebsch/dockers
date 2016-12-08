@@ -18,7 +18,8 @@ function java::build() {
 
 function java::package() {
 	fs::cleanupFolder $SRC_DIR '.git' && \
-		sdk::archiveTarget $SRC_DIR/target .
+		sdk::archiveTarget $SRC_DIR/target . && \
+		sdk::prepareDockerfile $SRC_DIR
 }
 
 java::prepare && java::build && java::package

@@ -18,7 +18,8 @@ function sdk::build() {
 
 function sdk::package() {
 	fs::cleanupFolder $SRC_DIR '.git' && \
-  	sdk::archiveTarget $SRC_DIR/dist '.'
+  	sdk::archiveTarget $SRC_DIR/dist '.' && \
+		sdk::prepareDockerfile $SRC_DIR
 }
 
 sdk::prepare && sdk::build && sdk::package

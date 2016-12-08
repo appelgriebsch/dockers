@@ -18,7 +18,8 @@ function go::build() {
 
 function go::package() {
 	fs::cleanupFolder $SRC_DIR '.git' && \
-  	sdk::archiveTarget $SRC_DIR $PROJ_NAME
+  	sdk::archiveTarget $SRC_DIR $PROJ_NAME && \
+		sdk::prepareDockerfile $SRC_DIR
 }
 
 go::prepare && go::build && go::package

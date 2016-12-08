@@ -1,13 +1,13 @@
 # Caddy Dockerfile
-# VERSION 0.9
+# VERSION 0.8
 #
 
 # Pull Alpine Linux stable base image
 FROM appelgriebsch/alpine:3.4
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="caddy-server"
-LABEL VERSION="0.9"
+LABEL NAME="caddy"
+LABEL VERSION="0.8"
 
 # the directory to place the site files
 ENV CADDY_SITEDIR   /data/caddy
@@ -20,10 +20,6 @@ ENV PORT            8080
 
 USER root
 RUN \
-    cd /tmp && \
-    curl -L -o caddy_linux_amd64.tar.gz "https://caddyserver.com/download/build?os=linux&arch=amd64&features=git%2Cipfilter%2Cjwt%2Clocale%2Cminify%2Cprometheus%2Cratelimit%2Crealip" && \
-    tar -xzf caddy_linux_amd64.tar.gz && \
-    rm -rf /tmp/caddy_linux_amd64.tar.gz && \
     mkdir -p $CADDY_SITEDIR/site && \
     chown -R nobody:nobody $CADDY_SITEDIR
 
@@ -45,4 +41,5 @@ EXPOSE  $PORT
 
 # run service
 USER nobody
-ENTRYPOINT ["/tmp/start_instance.sh"]
+CMD ["caddy", "-conf=$CADDY_SITEDIR/Caddyfile", " -host=$HOST", " -port=$PORT", \
+     "-agree", "-log=stdout", "-root=$CADDY_SITEDIR/site"]

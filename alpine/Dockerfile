@@ -11,7 +11,8 @@ LABEL VERSION="3.4"
 
 USER root
 
-RUN apk update && apk upgrade && apk add bash curl && \
+RUN apk update && \
+    apk add bash curl && \
     rm -rf /var/cache/apk/*
 
 # add startup-scripts

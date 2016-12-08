@@ -18,7 +18,8 @@ function nodejs::build() {
 
 function nodejs::package() {
 	fs::cleanupFolder $SRC_DIR '.git' && \
-		sdk::archiveTarget $SRC_DIR .
+		sdk::archiveTarget $SRC_DIR . && \
+		sdk::prepareDockerfile $SRC_DIR
 }
 
 nodejs::prepare && nodejs::build && nodejs::package
