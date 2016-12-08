@@ -23,11 +23,6 @@ RUN \
     mkdir -p $CADDY_SITEDIR/site && \
     chown -R nobody:nobody $CADDY_SITEDIR
 
-# add startup-script
-COPY start_instance.sh /tmp/
-RUN \
-  chmod 755 /tmp/start_instance.sh
-
 ONBUILD COPY Caddyfile  $CADDY_SITEDIR/
 
 # Define Volume
