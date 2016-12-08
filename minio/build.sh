@@ -10,7 +10,7 @@ GIT_REPO=github.com/minio/minio.git
 GIT_BRANCH=release
 
 # runtime specifics
-GO_VER=1.6
+GO_VER=1.7
 PROXY=
 NO_PROXY=
 
