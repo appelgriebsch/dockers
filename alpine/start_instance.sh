@@ -10,4 +10,5 @@ echo -e 'Host:\t' $HOST
 echo -e 'IP:\t' $(net::resolveIPAddress $HOST)
 echo -e 'OS:\t' $(os::version) release $(os::release) on $(os::arch)
 
+echo "Running command....$@"
 sh -c "$@"

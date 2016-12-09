@@ -1,7 +1,7 @@
 function sdk::prepareDockerfile() {
 
   local SRC_DIR=$1
-  local TM=$(date --iso-8601=minutes)
+  local TM=$(date -Iminutes)
 
   if [ -f $1/Dockerfile.template ]; then
     cat $1/Dockerfile.template > $1/Dockerfile
