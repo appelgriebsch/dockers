@@ -19,9 +19,11 @@ ENV HOST            127.0.0.1
 ENV PORT            8080
 
 USER root
+COPY caddy.sh /tmp/
 RUN \
     mkdir -p $CADDY_SITEDIR/site && \
-    chown -R nobody:nobody $CADDY_SITEDIR
+    chown -R nobody:nobody $CADDY_SITEDIR && \
+    chmod 755 /tmp/caddy.sh
 
 ONBUILD COPY Caddyfile  $CADDY_SITEDIR/
 
@@ -36,5 +38,4 @@ EXPOSE  $PORT
 
 # run service
 USER nobody
-CMD ["caddy", "-conf=$CADDY_SITEDIR/Caddyfile", " -host=$HOST", " -port=$PORT", \
-     "-agree", "-log=stdout", "-root=$CADDY_SITEDIR/site"]
+ENTRYPOINT ["/tmp/start_instance.sh", "/tmp/caddy.sh"]

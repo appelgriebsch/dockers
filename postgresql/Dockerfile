@@ -24,14 +24,11 @@ ENV PGSQL_LOGLVL	notice
 
 # install postgresql server
 USER root
+COPY postgresql.sh /tmp/
 RUN \
   mkdir -p /data/pgsql && \
   chown -R postgres:postgres /data/pgsql && \
-  chmod -R 755 /data/pgsql
-
-# add startup-script
-COPY postgresql.sh /tmp/
-RUN \
+  chmod -R 755 /data/pgsql && \
   chmod 755 /tmp/postgresql.sh
 
 # Define mountable directories.
@@ -45,4 +42,4 @@ EXPOSE $PGSQL_PORT
 
 # run service
 USER postgres
-CMD  ["/tmp/postgresql.sh"]
+ENTRYPOINT ["/tmp/start_instance.sh", "/tmp/postgresql.sh"]

@@ -27,18 +27,14 @@ ENV REDIS_LOGLVL	notice
 
 # install and configure redis
 USER root
-
+COPY redis.sh /tmp/
 RUN \
   mkdir -p /data/redis && \
   chown -R redis:redis /data/redis && \
   chmod -R 755 /data/redis && \
+  chmod 755 /tmp/redis.sh && \
   sed -i "s/^\(daemonize .*\)$/# \1/" /etc/redis.conf && \
   sed -i "s/^\(logfile .*\)$/# \1/" /etc/redis.conf
-
-# add startup-script
-COPY redis.sh /tmp/
-RUN \
-  chmod 755 /tmp/redis.sh
 
 # Define mountable directories.
 VOLUME /data/redis
@@ -51,4 +47,4 @@ EXPOSE $REDIS_PORT
 
 # run service
 USER redis
-CMD  ["/tmp/redis.sh"]
+ENTRYPOINT  ["/tmp/start_instance.sh", "/tmp/redis.sh"]
