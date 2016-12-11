@@ -25,5 +25,6 @@ _testmain.go
 *.prof
 
 *.un~
-*-Release.tar.gz
+*-Release.tar*
+Dockerfile
 dist/

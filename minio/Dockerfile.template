@@ -17,9 +17,11 @@ ENV MINIO_PATH                      '$GO_APPDIR/shared'
 # prepare image
 RUN mkdir -p $GO_APPDIR/shared
 COPY ./dist $GO_APPDIR/
-RUN chown -R nobody:nobody $GO_APPDIR
+COPY ./minio.sh /tmp/
+RUN chown -R nobody:nobody $GO_APPDIR && \
+    chmod 755 /tmp/minio.sh
 
 VOLUME $GO_APPDIR/shared
 
 USER nobody
-CMD ["/data/go/minio", "--config-dir", "/data/go/.minio", "--help"]
+ENTRYPOINT ["/tmp/start_instance.sh", "/tmp/minio.sh"]
