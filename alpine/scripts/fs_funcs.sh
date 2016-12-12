@@ -30,7 +30,7 @@ function fs::maskPath() {
   local pathDelimiter="\/"
   local replacementPattern="\\\\\/"
 
-  echo $(replaceInString $path $pathDelimiter $replacementPattern)
+  echo $(fs::replaceInString $path $pathDelimiter $replacementPattern)
 }
 
 function fs::cleanupFolder() {

@@ -13,8 +13,12 @@ LABEL VERSION="1.6"
 # specific env variables
 ENV GO_NS       'github.com/appelgriebsch/go-sample'
 
+ENV GOPATH      '/tmp/go-build'
+ENV GOBIN       '/usr/bin'
+
 # add updated startup-scripts
 COPY scripts/*.sh /tmp/scripts/
 COPY start_instance.sh /tmp/
 RUN \
+  $(curl https://glide.sh/get | sh) && \
   chmod 755 /tmp/start_instance.sh

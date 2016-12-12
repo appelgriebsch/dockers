@@ -6,6 +6,10 @@ done
 
 SRC_DIR=$(go::prepareBuildDir)
 
+GOPATH=$(go::setGoPath $SRC_DIR)
+export GOPATH
+echo "GOPATH set to $GOPATH"
+
 function go::prepare() {
   sdk::fetchSources $SRC_DIR && \
 		sdk::prepareBuildEnv $SRC_DIR && \
