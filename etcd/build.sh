@@ -2,12 +2,12 @@
 # package build specifics
 GO_NS=github.com/coreos/etcd
 PKG_NAME=etcd
-PKG_VER=0.1.0
+PKG_VER=3.1.0
 PKG_MAIN=main.go
 
 # Git repo settings
 GIT_REPO=github.com/coreos/etcd.git
-GIT_BRANCH=release-3.0
+GIT_BRANCH=release-3.1
 
 # runtime specifics
 GO_VER=1.7

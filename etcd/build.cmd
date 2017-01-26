@@ -2,12 +2,12 @@
 REM package build specifics
 set GO_NS=github.com/coreos/etcd
 set PKG_NAME=etcd
-set PKG_VER=0.1.0
+set PKG_VER=3.1.0
 set PKG_MAIN=main.go
 
 REM Git repo settings
 set GIT_REPO=github.com/coreos/etcd.git
-set GIT_BRANCH=release-3.0
+set GIT_BRANCH=release-3.1
 
 REM runtime specifics
 set GO_VER=1.7
