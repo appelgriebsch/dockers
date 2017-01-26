@@ -2,7 +2,7 @@
 # package build specifics
 GO_NS=github.com/minio/minio
 PKG_NAME=minio
-PKG_VER=0.1.0
+PKG_VER=0.2.0
 PKG_MAIN=main.go
 
 # Git repo settings
