@@ -17,6 +17,12 @@ function sdk::fetchSources() {
       git checkout -b $GIT_BRANCH origin/$GIT_BRANCH
     fi
 
+    if [ -n "$GIT_TAG" ]; then
+      echo "Switching to tagged version $GIT_TAG..."
+      cd $SRC_DIR
+      git checkout tags/$GIT_TAG
+    fi
+    
     if [ -f $SRC_DIR/.gitmodules ]; then
       cd $SRC_DIR
       git submodules update --init
