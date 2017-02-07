@@ -23,9 +23,6 @@ if exist %PKG_NAME%-%PKG_VER%-Release.tar.gz (
   if not exist %cd%\dist (
     md %cd%\dist
   )
-  if not exist %PKG_NAME%-%PKG_VER%-Release.tar (
-    7z x -y %PKG_NAME%-%PKG_VER%-Release.tar.gz
-  )
-  7z x -o%cd%\dist -y %PKG_NAME%-%PKG_VER%-Release.tar
+  tar -xzf %PKG_NAME%-%PKG_VER%-Release.tar.gz -C ./dist 
   docker build --build-arg http_proxy=%PROXY% --build-arg https_proxy=%PROXY% --build-arg no_proxy=%NO_PROXY% -t %PKG_NAME%:%PKG_VER% .
 )
