@@ -1,14 +1,14 @@
 
 # Golang-Build Dockerfile
-# VERSION 1.7
+# VERSION 1.8
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine-sdk:3.5
+FROM appelgriebsch/alpine-sdk:3.6
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="go-build"
-LABEL VERSION="1.7"
+LABEL VERSION="1.8"
 
 # specific env variables
 ENV GO_NS       'github.com/appelgriebsch/go-sample'

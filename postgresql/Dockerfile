@@ -3,7 +3,7 @@
 # VERSION 9.6
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.5
+FROM appelgriebsch/alpine:3.6
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="postgresql"
