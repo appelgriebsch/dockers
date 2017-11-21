@@ -1,14 +1,14 @@
 
 # Alpine-SDK Build Dockerfile
-# VERSION 3.5
+# VERSION 3.6
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.5
+FROM appelgriebsch/alpine:3.6
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="alpine-sdk"
-LABEL VERSION="3.5"
+LABEL VERSION="3.6"
 
 # build source environment variables
 # ENV GIT_REPO    'github.com/appelgriebsch/dockers.git'

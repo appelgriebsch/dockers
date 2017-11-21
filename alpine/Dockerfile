@@ -1,19 +1,19 @@
 #
-# Alpine Linux 3.5 Dockerfile
+# Alpine Linux 3.6 Dockerfile
 #
 
-# Pull Alpine 3.5 base image
-FROM alpine:3.5
+# Pull Alpine 3.6 base image
+FROM alpine:3.6
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="alpine-linux"
-LABEL VERSION="3.5"
+LABEL VERSION="3.6"
 
 USER root
 
 RUN apk update && \
-    apk add bash curl && \
-    rm -rf /var/cache/apk/*
+  apk add bash curl && \
+  rm -rf /var/cache/apk/*
 
 # add startup-scripts
 COPY scripts/*.sh /tmp/scripts/
