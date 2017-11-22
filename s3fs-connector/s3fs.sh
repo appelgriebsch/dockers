@@ -72,12 +72,17 @@ else
     chown -R nobody:nobody $S3_CACHE_DIR
   fi
 
+  SYNC_OPTIONS=""
+  if [ "$S3_FORCE_REMOVE" == "true" ]; then
+    SYNC_OPTIONS="--force"
+  fi
+
   echo Initial synchronization from $S3_BUCKET to $S3_CACHE_DIR...
   s3cmd --config=/tmp/.s3cmd sync s3://$S3_BUCKET $S3_CACHE_DIR --recursive
 
   while [ true ]; do
     echo Synching folders from $S3_CACHE_DIR to $S3_BUCKET...
-    s3cmd --config=/tmp/.s3cmd sync $S3_CACHE_DIR s3://$S3_BUCKET --recursive
-      sleep $S3_SYNC_INTERVAL
+    s3cmd --config=/tmp/.s3cmd sync $S3_CACHE_DIR s3://$S3_BUCKET --recursive --delete-removed $SYNC_OPTIONS
+    sleep $S3_SYNC_INTERVAL
   done
 fi

@@ -16,7 +16,12 @@ RUN \
   curl -L -o maven.tar.gz "http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz" && \
   tar -xzf maven.tar.gz && \
   cp -R apache-maven*/* /usr/local/ && \
-  rm -rf maven.tar.gz apache-maven*
+  rm -rf maven.tar.gz apache-maven* && \
+  curl -L -o gradle-3.5-bin.zip "https://services.gradle.org/distributions/gradle-3.5-bin.zip" && \
+  unzip gradle-3.5-bin.zip && \
+  cp -R gradle-*/* /usr/local/ && \
+  rm -rf gradle-3.5-bin.zip gradle-* && \
+  rm -rf /usr/local/lib/gradle-logging*
 
 # add updated startup-scripts
 COPY scripts/*.sh /tmp/scripts/

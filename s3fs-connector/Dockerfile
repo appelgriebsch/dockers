@@ -16,6 +16,7 @@ ENV S3_SECRET_KEY                '12345678'
 
 ENV S3_CACHE_DIR                 '/data/cache/'
 ENV S3_SYNC_INTERVAL             '10s'
+ENV S3_FORCE_REMOVE              'false'
 
 # prepare image
 USER root
