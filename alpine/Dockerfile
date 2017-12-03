@@ -1,13 +1,13 @@
 #
-# Alpine Linux 3.6 Dockerfile
+# Alpine Linux 3.7 Dockerfile
 #
 
-# Pull Alpine 3.6 base image
-FROM alpine:3.6
+# Pull Alpine 3.7 base image
+FROM alpine:3.7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="alpine-linux"
-LABEL VERSION="3.6"
+LABEL VERSION="3.7"
 
 USER root
 

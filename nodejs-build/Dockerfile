@@ -1,14 +1,14 @@
 
 # Nodejs-Build Dockerfile
-# VERSION 6.10
+# VERSION 8.9
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine-sdk:3.6
+FROM appelgriebsch/alpine-sdk:3.7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="nodejs-build"
-LABEL VERSION="6.10"
+LABEL VERSION="8.9"
 
 # add updated startup-scripts
 COPY scripts/*.sh /tmp/scripts/

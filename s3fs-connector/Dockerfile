@@ -1,5 +1,5 @@
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.6
+FROM appelgriebsch/alpine:3.7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="s3fs"

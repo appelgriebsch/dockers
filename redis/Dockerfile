@@ -1,14 +1,14 @@
 #
 # Redis Dockerfile
-# VERSION 3.2
+# VERSION 4.0
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.6
+FROM appelgriebsch/alpine:3.7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="redis"
-LABEL VERSION="3.2"
+LABEL VERSION="4.0"
 
 # bind to localhost only (will expose a socket for connection)
 ENV REDIS_BIND		127.0.0.1
