@@ -1,4 +1,0 @@
-# declare line endings for shell scripts to be Linux style
-*.sh                text eol=lf
-dependencies.lst    text eol=lf
-devDependencies.lst    text eol=lf
