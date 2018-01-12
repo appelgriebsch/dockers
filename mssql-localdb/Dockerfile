@@ -29,18 +29,13 @@ RUN reg export "HKLM\System\CurrentControlSet\services\EventLog\Application\SQLV
 RUN reg export "HKLM\System\CurrentControlSet\services\EventLog\Application\SQLWriter" HKLM_EVT_SQLWRITER.reg
 RUN reg export "HKLM\System\CurrentControlSet\services\SQLWriter" HKLM_SVC_SQLWRITER.reg
 
-FROM microsoft/nanoserver:1709
+FROM microsoft/nanoserver:sac2016
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="mssql-localdb"
 LABEL VERSION="2017"
 
-USER ContainerAdministrator
-
-RUN mkdir C:\MSSQL && \
-        mkdir "C:\Program Files" && \
-        mkdir "C:\Program Files\common" && \
-        mkdir "C:\Program Files (x86)" && \
+RUN mkdir C:\MSSQL & \
         setx /m PATH %PATH%;"C:\Program Files\Microsoft SQL Server\140\Tools\Binn"
 
 # make install files accessible
@@ -53,5 +48,3 @@ RUN FOR %r in (C:\MSSQL\*.reg) DO reg import %r
 RUN regsvr32 "C:\Program Files\Microsoft SQL Server\80\COM\sqlvdi.dll"
 
 WORKDIR "/MSSQL"
-
-USER ContainerUser
