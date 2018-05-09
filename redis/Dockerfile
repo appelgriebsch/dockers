@@ -4,7 +4,7 @@
 #
 
 # Pull Alpine Linux stable base image
-FROM appelgriebsch/alpine:3.7
+FROM quay.io/appelgriebsch/alpine:3.7
 MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
 LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
 LABEL NAME="redis"
