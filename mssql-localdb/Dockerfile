@@ -1,5 +1,5 @@
 # load initial Windows Server Core Image in version 1709
-FROM microsoft/windowsservercore:1709 as builder
+FROM microsoft/windowsservercore:1803
 
 # Download Links:
 ENV     sql_installer_download_url "https://download.microsoft.com/download/E/F/2/EF23C21D-7860-4F05-88CE-39AA114B014B/SqlLocalDB.msi"
@@ -21,30 +21,3 @@ SHELL ["cmd", "/C"]
 
 WORKDIR "/MSSQL"
 
-RUN reg export "HKLM\Software\Wow6432Node\Microsoft\Microsoft SQL Server Local DB" HKLM_SW_SQLLOCALDB_32.reg
-RUN reg export "HKLM\Software\Microsoft\Microsoft SQL Server Local DB" HKLM_SW_SQLLOCALDB.reg
-RUN reg export "HKLM\Software\Microsoft\Microsoft SQL Server" HKLM_SW_SQLSERVER.reg
-RUN reg export "HKLM\System\CurrentControlSet\services\EventLog\Application\SQLLocalDB 14.0" HKLM_EVT_SQLLOCALDB.reg
-RUN reg export "HKLM\System\CurrentControlSet\services\EventLog\Application\SQLVDI" HKLM_EVT_SQLVDI.reg
-RUN reg export "HKLM\System\CurrentControlSet\services\EventLog\Application\SQLWriter" HKLM_EVT_SQLWRITER.reg
-RUN reg export "HKLM\System\CurrentControlSet\services\SQLWriter" HKLM_SVC_SQLWRITER.reg
-
-FROM microsoft/nanoserver:sac2016
-MAINTAINER Andreas Gerlach <info@appelgriebsch.com>
-LABEL AUTHOR="Andreas Gerlach <info@appelgriebsch.com>"
-LABEL NAME="mssql-localdb"
-LABEL VERSION="2017"
-
-RUN mkdir C:\MSSQL & \
-        setx /m PATH %PATH%;"C:\Program Files\Microsoft SQL Server\140\Tools\Binn"
-
-# make install files accessible
-COPY --from=builder ["/Program Files/Microsoft SQL Server", "/Program Files/Microsoft SQL Server"]
-COPY --from=builder ["/Program Files/common files/Microsoft Shared/SQL Debugging", "/Program Files/common files/Microsoft Shared/SQL Debugging"]
-COPY --from=builder ["/Program Files (x86)/Microsoft SQL Server", "/Program Files (x86)/Microsoft SQL Server"]
-COPY --from=builder ["/MSSQL", "/MSSQL"]
-
-RUN FOR %r in (C:\MSSQL\*.reg) DO reg import %r
-RUN regsvr32 "C:\Program Files\Microsoft SQL Server\80\COM\sqlvdi.dll"
-
-WORKDIR "/MSSQL"
